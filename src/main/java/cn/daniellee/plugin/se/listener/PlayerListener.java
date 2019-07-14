@@ -27,11 +27,11 @@ public class PlayerListener implements Listener {
 		String itemType = e.getBlock().getType().name();
 		if (SurvivalExpert.getInstance().getOreBlocks().contains(itemType)) {
 			if (random.nextInt(SurvivalExpert.getInstance().getOrePointRange()) == 0) {
-				String path = player.getName() + ".fight.total";
+				String path = player.getName() + ".battle.total";
 				int targetPoints = SurvivalExpert.getInstance().getPlayerData().getInt(path, 0) + 1;
 				SurvivalExpert.getInstance().getPlayerData().set(path, targetPoints);
 				SurvivalExpert.getInstance().savePlayerData();
-				player.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.earn-point", "&eCongratulations on getting &b1 &e{type}&e points, total points &b{total}").replace("{type}", SurvivalExpert.getInstance().getConfig().getString("message.type.ore", "&dFight")).replace("{total}", Integer.toString(targetPoints))).replace("&", "§"));
+				player.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.earn-point", "&eCongratulations on getting &b1 &e{type}&e points, total points &b{total}").replace("{type}", SurvivalExpert.getInstance().getConfig().getString("message.type.battle", "&dBattle")).replace("{total}", Integer.toString(targetPoints))).replace("&", "§"));
 			}
 		} else if (SurvivalExpert.getInstance().getCropBlocks().contains(itemType)) {
 			Integer age = SurvivalExpert.getInstance().getAgeCheckBlock().get(itemType);
@@ -43,11 +43,11 @@ public class PlayerListener implements Listener {
 				}
 			}
 			if (random.nextInt(SurvivalExpert.getInstance().getCropPointRange()) == 0) {
-				String path = player.getName() + ".survival.total";
+				String path = player.getName() + ".life.total";
 				int targetPoints = SurvivalExpert.getInstance().getPlayerData().getInt(path, 0) + 1;
 				SurvivalExpert.getInstance().getPlayerData().set(path, targetPoints);
 				SurvivalExpert.getInstance().savePlayerData();
-				player.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.earn-point", "&eCongratulations on getting &b1 &e{type}&e points, total points &b{total}").replace("{type}", SurvivalExpert.getInstance().getConfig().getString("message.type.crop", "&dSurvival")).replace("{total}", Integer.toString(targetPoints))).replace("&", "§"));
+				player.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.earn-point", "&eCongratulations on getting &b1 &e{type}&e points, total points &b{total}").replace("{type}", SurvivalExpert.getInstance().getConfig().getString("message.type.life", "&dLife")).replace("{total}", Integer.toString(targetPoints))).replace("&", "§"));
 			}
 		}
 	}

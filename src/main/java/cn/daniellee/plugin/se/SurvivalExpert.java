@@ -1,10 +1,15 @@
 package cn.daniellee.plugin.se;
 
 import cn.daniellee.plugin.se.command.ExpertCommand;
+import cn.daniellee.plugin.se.listener.MenuListener;
 import cn.daniellee.plugin.se.listener.PlayerListener;
+import cn.daniellee.plugin.se.model.GemInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Item;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -14,6 +19,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class SurvivalExpert extends JavaPlugin {
 
@@ -33,6 +39,12 @@ public class SurvivalExpert extends JavaPlugin {
 
 	private int cropPointRange;
 
+	public static final String GEM_LORE = "§3SurvivalExpert:{type}:{level}";
+
+	public static final String SLOT_LORE = "§3SurvivalExpert:Slot";
+
+	public static final Pattern GEM_LORE_PATTERN = Pattern.compile("^§3SurvivalExpert:(Battle|Life):\\d$");
+
 	// 需要检查Age属性的方块
 	private Map<String, Integer> ageCheckBlock = new HashMap<>();
 
@@ -46,6 +58,7 @@ public class SurvivalExpert extends JavaPlugin {
 		getLogger().info(" ");
 
 		Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
+		Bukkit.getPluginManager().registerEvents(new MenuListener(), this);
 
 		Bukkit.getPluginCommand("survivalexpert").setExecutor(new ExpertCommand());
 
@@ -137,5 +150,37 @@ public class SurvivalExpert extends JavaPlugin {
 
 	public Map<String, Integer> getAgeCheckBlock() {
 		return ageCheckBlock;
+	}
+
+	public boolean isSlot(ItemStack itemStack) {
+		if (itemStack != null) {
+			ItemMeta itemMeta = itemStack.getItemMeta();
+			if (itemMeta != null) {
+				List<String> lore = itemMeta.getLore();
+				if (lore != null && !lore.isEmpty()) {
+					return SLOT_LORE.equals(lore.get(0));
+				}
+			}
+		}
+		return false;
+	}
+
+	public GemInfo getGemInfoByItemStack(ItemStack itemStack) {
+		if (itemStack != null) {
+			ItemMeta itemMeta = itemStack.getItemMeta();
+			if (itemMeta != null) {
+				List<String> lore = itemMeta.getLore();
+				if (lore != null && !lore.isEmpty()) {
+					String firstLore = lore.get(0);
+					if (GEM_LORE_PATTERN.matcher(firstLore).matches()) {
+						GemInfo gemInfo = new GemInfo();
+						gemInfo.setType(firstLore.substring(firstLore.indexOf(":") + 1, firstLore.lastIndexOf(":")));
+						gemInfo.setLevel(Integer.valueOf(firstLore.substring(firstLore.lastIndexOf(":") + 1)));
+						return gemInfo;
+					}
+				}
+			}
+		}
+		return null;
 	}
 }

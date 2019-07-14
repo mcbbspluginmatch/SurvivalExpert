@@ -1,0 +1,9 @@
+Teemo:
+  battle:
+    total: 1000
+    used: 500
+    gem: 3
+  life:
+    total: 1000
+    used: 500
+    gem: 5
