@@ -1,0 +1,38 @@
+#提示信息前缀
+prompt-prefix: '&6生存专家'
+
+#菜单配置
+menu:
+  #边角填充方块配置
+  common:
+    corner:
+      material: MAGENTA_STAINED_GLASS_PANE
+      durability: 0
+    border:
+      material: BLUE_STAINED_GLASS_PANE
+      durability: 0
+  #宝石菜单配置
+  gem:
+    title: '&e宝石装备'
+
+#全局配置
+setting:
+  #矿物配置
+  ore:
+    #矿物方块配置
+    blocks: COAL_ORE,IRON_ORE,GOLD_ORE,DIAMOND_ORE,EMERALD_ORE,LAPIS_ORE,REDSTONE_ORE,NETHER_QUARTZ_ORE
+    #获取战斗点数的几率
+    chance: 0.1
+  #作物配置
+  crop:
+    #作物方块配置
+    blocks: WHEAT,CARROTS,POTATOS,BEETROOTS,COCOA,NETHER_WARTS,CHORUS_FLOWER,SUGAR_CANE,PUMPKIN,MELON,CACTUS
+    #获取生存点数的几率
+    chance: 0.1
+
+#提示信息
+message:
+  earn-point: '&e恭喜你获得 &b1 &e{type} &e点数， 总点数 &b{total}'
+  type:
+    ore: '&d战斗'
+    crop: '&a生存'

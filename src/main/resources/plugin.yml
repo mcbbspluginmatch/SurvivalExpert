@@ -1,0 +1,9 @@
+name: ${artifactId}
+main: cn.daniellee.plugin.se.SurvivalExpert
+version: ${version}
+api-version: 1.13
+commands:
+  survivalexpert:
+    usage: /<command>
+    aliases: [se, expert, survival]
+    description: SurvivalExpert
