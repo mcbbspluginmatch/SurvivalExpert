@@ -27,7 +27,7 @@ public class PlayerListener implements Listener {
 		String itemType = e.getBlock().getType().name();
 		if (SurvivalExpert.getInstance().getOreBlocks().contains(itemType)) {
 			if (random.nextInt(SurvivalExpert.getInstance().getOrePointRange()) == 0) {
-				String path = player.getName() + ".points.fight";
+				String path = player.getName() + ".fight.total";
 				int targetPoints = SurvivalExpert.getInstance().getPlayerData().getInt(path, 0) + 1;
 				SurvivalExpert.getInstance().getPlayerData().set(path, targetPoints);
 				SurvivalExpert.getInstance().savePlayerData();
@@ -43,7 +43,7 @@ public class PlayerListener implements Listener {
 				}
 			}
 			if (random.nextInt(SurvivalExpert.getInstance().getCropPointRange()) == 0) {
-				String path = player.getName() + ".points.survival";
+				String path = player.getName() + ".survival.total";
 				int targetPoints = SurvivalExpert.getInstance().getPlayerData().getInt(path, 0) + 1;
 				SurvivalExpert.getInstance().getPlayerData().set(path, targetPoints);
 				SurvivalExpert.getInstance().savePlayerData();
