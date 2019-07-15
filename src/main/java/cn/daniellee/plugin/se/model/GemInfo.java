@@ -6,6 +6,13 @@ public class GemInfo {
 
     private int level;
 
+    public GemInfo() {}
+
+    public GemInfo(String type, int level) {
+        this.type = type;
+        this.level = level;
+    }
+
     public String getType() {
         return type;
     }

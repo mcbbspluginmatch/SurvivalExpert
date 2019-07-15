@@ -12,8 +12,10 @@ import java.util.List;
  */
 public class ItemGenerator {
 
-	public static ItemStack getItem(String name, List<String> lore, String material, int durability) {
-		ItemStack itemStack = new ItemStack(Material.valueOf(material.toUpperCase()));
+	public static ItemStack getItem(String name, List<String> lore, String m, int durability) {
+		Material material = Material.getMaterial(m.toUpperCase());
+		if (material == null) material = Material.STONE;
+		ItemStack itemStack = new ItemStack(material);
 		itemStack.setDurability((short) durability);
 		ItemMeta itemMeta = itemStack.getItemMeta();
 		itemMeta.setDisplayName(name.replace("&", "§"));
@@ -26,7 +28,9 @@ public class ItemGenerator {
 	}
 
 	public static ItemStack getSkullItem(String owner, String name, List<String> lore) {
-		ItemStack itemStack = new ItemStack(Material.PLAYER_HEAD);
+		Material material = Material.getMaterial("PLAYER_HEAD");
+		if (material == null) material = Material.getMaterial("SKULL_ITEM");
+		ItemStack itemStack = new ItemStack(material);
 		itemStack.setDurability((short) 3);
 		SkullMeta skullMeta = (SkullMeta) itemStack.getItemMeta();
 		skullMeta.setOwner(owner);

@@ -7,3 +7,14 @@ commands:
     usage: /<command>
     aliases: [se, expert, survival]
     description: SurvivalExpert
+
+permissions:
+  expert.command.*:
+    description: ability to use all commands
+    children:
+      expert.command.give: true
+      expert.command.reload: true
+  expert.command.give:
+    description: ability to use give command
+  expert.command.reload:
+    description: ability to use reload command
