@@ -2,12 +2,16 @@ package cn.daniellee.plugin.se.listener;
 
 import cn.daniellee.plugin.se.SurvivalExpert;
 import cn.daniellee.plugin.se.core.GemCore;
+import cn.daniellee.plugin.se.menu.EquipMenu;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
@@ -36,19 +40,40 @@ public class PlayerListener implements Listener {
 	}
 
 	private void refreshMaxHealth(Player player) {
-		int maxHealth = 20 + SurvivalExpert.getInstance().getPlayerData().getInt(player.getName() + ".life.gem", 0) * 5;
+		int maxHealth = 20 + GemCore.getHealthBonus(player.getName());
 		player.setHealthScale(maxHealth);
 		player.setMaxHealth(maxHealth);
 		player.setHealth(maxHealth);
 	}
 
+	@EventHandler
+	public void onPlayerDeath(PlayerDeathEvent e) {
+		if (e.getDeathMessage() != null && e.getDeathMessage().contains("slain by ")) {
+			String killerStr = e.getDeathMessage().substring(e.getDeathMessage().indexOf("slain by ") + 9);
+			if (killerStr.contains(" ")) killerStr = killerStr.substring(0, killerStr.indexOf(" "));
+			Player killer = Bukkit.getPlayer(killerStr);
+			if (killer != null) {
+				Bukkit.broadcastMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.boardcast.kill", "&c{killer} &ecarries &b{battleLevel} &elevel {battle} &egems &b{lifeLevel} &elevel {life} &egems killed &c{dead}.").replace("{killer}", killer.getName()).replace("{battleLevel}", Integer.toString(GemCore.getDamageBonus(killer.getName()) / 5)).replace("{battle}", SurvivalExpert.getInstance().getConfig().getString("message.type.battle", "&dBattle")).replace("{lifeLevel}", Integer.toString(GemCore.getHealthBonus(killer.getName()) / 5)).replace("{life}", SurvivalExpert.getInstance().getConfig().getString("message.type.life", "&aLife")).replace("{dead}", e.getEntity().getName())).replace("&", "§"));
+			}
+		}
+	}
+
+	@EventHandler
+	public void onPlayerInteract(PlayerInteractEvent e) {
+		if (GemCore.isShortcut(e.getItem())) {
+			e.getPlayer().openInventory(EquipMenu.generate(e.getPlayer()));
+			e.setCancelled(true);
+		}
+	}
+
 	/**
-	 * 玩家破坏矿物方块或作物方块时根据比率获得点数
+	 * 玩家破坏矿物方块或作物方块时根据比率获得点数，计数的优先级放在最后
 	 * @param e 事件
 	 */
-	@EventHandler
+	@EventHandler(priority=EventPriority.HIGHEST)
 	public void onBlockBreak(BlockBreakEvent e) {
 		Player player = e.getPlayer();
+		if (e.isCancelled()) return;
 		String itemType = e.getBlock().getType().name();
 		// 是否需要方块年龄检查
 		Integer age = SurvivalExpert.getInstance().getAgeCheckBlock().get(itemType);
@@ -81,18 +106,13 @@ public class PlayerListener implements Listener {
 
 	/**
 	 * 在打出伤害时根据装备的宝石进行伤害加成
-	 * @param e
+	 * @param e 事件
 	 */
 	@EventHandler
-	public void onPlayerAttack(EntityDamageByEntityEvent e) {
+	public void onEntityDamageByEntity(EntityDamageByEntityEvent e) {
 		if ((e.getDamager() instanceof Player)) {
 			Player damager = (Player) e.getDamager();
-			Integer damageBonus = GemCore.damageBonusCache.get(damager.getName());
-			if (damageBonus == null) {
-				damageBonus = SurvivalExpert.getInstance().getPlayerData().getInt(damager.getName() + ".battle.gem", 0) * 5;
-				GemCore.damageBonusCache.put(damager.getName(), damageBonus);
-			}
-			e.setDamage(e.getDamage() + damageBonus);
+			e.setDamage(e.getDamage() + GemCore.getDamageBonus(damager.getName()));
 		}
 	}
 

@@ -11,7 +11,7 @@ import java.util.List;
 public class EnumMenu {
 
 	public static Inventory generate() {
-		Inventory menu = Bukkit.createInventory(new EnumMenuHolder(), 45, SurvivalExpert.getInstance().getConfig().getString("menu.main.title", "&b&lOre / Crop").replace("&", "§"));
+		Inventory menu = Bukkit.createInventory(new EnumMenuHolder(), 45, SurvivalExpert.getInstance().getConfig().getString("menu.main.title", "&6&lOre / Crop").replace("&", "§"));
 
 		// 填充角
 		int cornerPosition[] = new int[]{ 18, 20, 22, 24, 26 };

@@ -17,14 +17,49 @@ public class GemCore {
 
 	public static final String SLOT_LORE = "§3SurvivalExpert:Slot";
 
+	public static final String SHORTCUT_LORE = "§3SurvivalExpert:Shortcut";
+
 	public static final Pattern GEM_LORE_PATTERN = Pattern.compile("^§3SurvivalExpert:(Battle|Life):\\d+$");
 
 	public static Map<String, Integer> damageBonusCache = new HashMap<>();
+
+	public static Map<String, Integer> healthBonusCache = new HashMap<>();
+
+	public static int getDamageBonus(String name) {
+		Integer damageBonus = GemCore.damageBonusCache.get(name);
+		if (damageBonus == null) {
+			damageBonus = SurvivalExpert.getInstance().getPlayerData().getInt(name + ".battle.gem", 0) * 5;
+			GemCore.damageBonusCache.put(name, damageBonus);
+		}
+		return damageBonus;
+	}
+
+	public static int getHealthBonus(String name) {
+		Integer healthBonus = GemCore.healthBonusCache.get(name);
+		if (healthBonus == null) {
+			healthBonus = SurvivalExpert.getInstance().getPlayerData().getInt(name + ".life.gem", 0) * 5;
+			GemCore.healthBonusCache.put(name, healthBonus);
+		}
+		return healthBonus;
+	}
 
 	public static ItemStack getGemItemStack(GemInfo gemInfo) {
 		List<String> gemLore = SurvivalExpert.getInstance().getConfig().getStringList("gem." + gemInfo.getType().toLowerCase() + ".lore");
 		gemLore.add(0, GEM_LORE.replace("{type}", gemInfo.getType()).replace("{level}", Integer.toString(gemInfo.getLevel())));
 		return ItemGenerator.getItem(SurvivalExpert.getInstance().getConfig().getString("gem." + gemInfo.getType().toLowerCase() + ".name", "&7[&6SurvivalExpert&7]" + ("Battle".equals(gemInfo.getType()) ? "&d" : "&a") + gemInfo.getType() + "&bGem&7[&eLv.{level}&7]").replace("{level}", Integer.toString(gemInfo.getLevel())), gemLore, SurvivalExpert.getInstance().getConfig().getString("gem." + gemInfo.getType().toLowerCase() + ".item.material", "Battle".equals(gemInfo.getType()) ? "MAGMA_CREAM" : "SLIME_BALL"), SurvivalExpert.getInstance().getConfig().getInt("gem." + gemInfo.getType().toLowerCase() + ".item.durability", 0));
+	}
+
+	public static boolean isShortcut(ItemStack itemStack) {
+		if (itemStack != null) {
+			ItemMeta itemMeta = itemStack.getItemMeta();
+			if (itemMeta != null) {
+				List<String> lore = itemMeta.getLore();
+				if (lore != null && !lore.isEmpty()) {
+					return SHORTCUT_LORE.equals(lore.get(0));
+				}
+			}
+		}
+		return false;
 	}
 
 	public static boolean isSlot(ItemStack itemStack) {

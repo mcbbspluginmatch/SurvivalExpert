@@ -16,7 +16,7 @@ import java.util.Set;
 public class RankingMenu {
 
 	public static Inventory generate(Player player) {
-		Inventory menu = Bukkit.createInventory(new RankingMenuHolder(), 45, SurvivalExpert.getInstance().getConfig().getString("menu.ranking.title", "&b&lPoints ranking").replace("&", "§"));
+		Inventory menu = Bukkit.createInventory(new RankingMenuHolder(), 45, SurvivalExpert.getInstance().getConfig().getString("menu.ranking.title", "&6&lPoints ranking").replace("&", "§"));
 
 		// 填充角
 		int[] cornerPosition = new int[]{0, 8, 18, 26, 36, 44};

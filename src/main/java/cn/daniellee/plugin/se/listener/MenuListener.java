@@ -1,6 +1,7 @@
 package cn.daniellee.plugin.se.listener;
 
 import cn.daniellee.plugin.se.SurvivalExpert;
+import cn.daniellee.plugin.se.component.ItemGenerator;
 import cn.daniellee.plugin.se.core.GemCore;
 import cn.daniellee.plugin.se.menu.EnumMenu;
 import cn.daniellee.plugin.se.menu.EquipMenu;
@@ -8,6 +9,7 @@ import cn.daniellee.plugin.se.menu.RankingMenu;
 import cn.daniellee.plugin.se.menu.UpgradeMenu;
 import cn.daniellee.plugin.se.menu.holder.*;
 import cn.daniellee.plugin.se.model.GemInfo;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,6 +20,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 public class MenuListener implements Listener {
@@ -35,7 +38,19 @@ public class MenuListener implements Listener {
             if (menu.getHolder() instanceof MainMenuHolder) {
                 e.setCancelled(true);
                 if (e.getRawSlot() == 11) {
-                    player.openInventory(EquipMenu.generate(player));
+                    if (e.getClick().isLeftClick()) {
+                        player.openInventory(EquipMenu.generate(player));
+                    } else if (e.getClick().isRightClick()) {
+                        List<String> shortcutLore = SurvivalExpert.getInstance().getConfig().getStringList("gem.shortcut.lore");
+                        shortcutLore.add(0, GemCore.SHORTCUT_LORE);
+                        ItemStack shortcut = ItemGenerator.getItem(SurvivalExpert.getInstance().getConfig().getString("gem.shortcut.name", "&7[&6SurvivalExpert&7]&bGem equipment bar"), shortcutLore, SurvivalExpert.getInstance().getConfig().getString("gem.shortcut.item.material", "SNOWBALL"), SurvivalExpert.getInstance().getConfig().getInt("gem.shortcut.item.durability", 0));
+                        player.getInventory().addItem(shortcut);
+                        if (player.getInventory().contains(shortcut)){
+                            player.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.get-shortcut", "&eSuccessfully add shortcut to your inventory.")).replace("&", "§"));
+                        } else {
+                            player.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.inventory-full", "&eYour inventory is full and you can't get the target item.")).replace("&", "§"));
+                        }
+                    }
                 } else if (e.getRawSlot() == 13) {
                     player.openInventory(UpgradeMenu.generate());
                 } else if (e.getRawSlot() == 15) {
@@ -94,8 +109,6 @@ public class MenuListener implements Listener {
                         if ("AIR".equals(e.getCursor().getType().toString())) {
                             // 如果不是插槽占位符就给卸下
                             if (!GemCore.isSlot(e.getCurrentItem())) {
-                                SurvivalExpert.getInstance().getPlayerData().set(player.getName() + ".battle.gem", null);
-                                SurvivalExpert.getInstance().savePlayerData();
                                 player.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.un-equip", "&eYou removed your gem, the bonus will be removed.")).replace("&", "§"));
                                 // 立即设置伤害加成缓存
                                 GemCore.damageBonusCache.put(player.getName(), 0);
@@ -107,8 +120,6 @@ public class MenuListener implements Listener {
                                 if (GemCore.isSlot(e.getCurrentItem())) {
                                     e.setCurrentItem(null);
                                 }
-                                SurvivalExpert.getInstance().getPlayerData().set(player.getName() + ".battle.gem", gemInfo.getLevel());
-                                SurvivalExpert.getInstance().savePlayerData();
                                 player.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.gem-equip", "&eSuccessfully equipped {type} &egem, level &b{level}.").replace("{type}", SurvivalExpert.getInstance().getConfig().getString("message.type.battle", "&dBattle")).replace("{level}", Integer.toString(gemInfo.getLevel()))).replace("&", "§"));
                                 // 立即设置伤害加成缓存
                                 GemCore.damageBonusCache.put(player.getName(), 5 * gemInfo.getLevel());
@@ -119,9 +130,9 @@ public class MenuListener implements Listener {
                         if ("AIR".equals(e.getCursor().getType().toString())) {
                             // 如果不是插槽占位符就给卸下
                             if (!GemCore.isSlot(e.getCurrentItem())) {
-                                SurvivalExpert.getInstance().getPlayerData().set(player.getName() + ".life.gem", null);
-                                SurvivalExpert.getInstance().savePlayerData();
                                 player.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.un-equip", "&eYou removed your gem, the bonus will be removed.")).replace("&", "§"));
+                                // 立即设置生命加成缓存
+                                GemCore.healthBonusCache.put(player.getName(), 0);
                                 // 立即设置最大生命值
                                 player.setHealthScale(20);
                                 player.setMaxHealth(20);
@@ -134,9 +145,9 @@ public class MenuListener implements Listener {
                                 if (GemCore.isSlot(e.getCurrentItem())) {
                                     e.setCurrentItem(null);
                                 }
-                                SurvivalExpert.getInstance().getPlayerData().set(player.getName() + ".life.gem", gemInfo.getLevel());
-                                SurvivalExpert.getInstance().savePlayerData();
                                 player.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.gem-equip", "&eSuccessfully equipped {type} &egem, level &b{level}.").replace("{type}", SurvivalExpert.getInstance().getConfig().getString("message.type.life", "&aLife")).replace("{level}", Integer.toString(gemInfo.getLevel()))).replace("&", "§"));
+                                // 立即设置生命加成缓存
+                                GemCore.healthBonusCache.put(player.getName(), 5 * gemInfo.getLevel());
                                 // 立即设置最大生命值
                                 player.setHealthScale(20 + 5 * gemInfo.getLevel());
                                 player.setMaxHealth(20 + 5 * gemInfo.getLevel());
@@ -182,7 +193,10 @@ public class MenuListener implements Listener {
                                     gemInfo.setLevel(gemInfo.getLevel() - 1);
                                     e.setCurrentItem(GemCore.getGemItemStack(gemInfo));
                                     player.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.up-failed", "&eOps! The upgrade failed, you lost half of the gems.")).replace("&", "§"));
-                                } else player.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.up-success", "&eCongratulations! Gem upgrade is successful!")).replace("&", "§"));
+                                } else {
+                                    player.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.up-success", "&eCongratulations! Gem upgrade is successful!")).replace("&", "§"));
+                                    Bukkit.broadcastMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.boardcast.upgrade", "&c{name} &ehas successfully combined &b{level} &elevel {type} &egems!").replace("{name}", player.getName()).replace("{level}", Integer.toString(gemInfo.getLevel())).replace("{type}", SurvivalExpert.getInstance().getConfig().getString("message.type." + gemInfo.getType().toLowerCase(), "Battle".equals(gemInfo.getType()) ? "&dBattle" : "&aLife"))).replace("&", "§"));
+                                }
                                 menu.setItem(0, null);
                                 menu.setItem(2, null);
                                 menu.setItem(4, UpgradeMenu.getRateItemStack("0"));
@@ -195,7 +209,7 @@ public class MenuListener implements Listener {
     }
 
     /**
-     * 关闭的时候如果有没拿的宝石就扔到地上
+     * 关闭的时候如果有没拿的宝石就扔到地上，宝石装备在关闭时才保存进配置文件
      * @param e 事件
      */
     @EventHandler
@@ -210,6 +224,39 @@ public class MenuListener implements Listener {
                 }
                 if (menu.getItem(2) != null) {
                     player.getWorld().dropItem(player.getLocation(), menu.getItem(2));
+                }
+            } else if (menu.getHolder() instanceof EquipMenuHolder) {
+                GemInfo battleGem = GemCore.getGemInfoByItemStack(menu.getItem(0));
+                if (battleGem != null) {
+                    SurvivalExpert.getInstance().getPlayerData().set(player.getName() + ".battle.gem", battleGem.getLevel());
+                    SurvivalExpert.getInstance().savePlayerData();
+                    // 重新设置伤害加成缓存
+                    GemCore.damageBonusCache.put(player.getName(), 5 * battleGem.getLevel());
+                } else {
+                    SurvivalExpert.getInstance().getPlayerData().set(player.getName() + ".battle.gem", null);
+                    SurvivalExpert.getInstance().savePlayerData();
+                    // 重新设置伤害加成缓存
+                    GemCore.damageBonusCache.put(player.getName(), 0);
+                }
+                GemInfo lifeGem = GemCore.getGemInfoByItemStack(menu.getItem(4));
+                if (lifeGem != null) {
+                    SurvivalExpert.getInstance().getPlayerData().set(player.getName() + ".life.gem", lifeGem.getLevel());
+                    SurvivalExpert.getInstance().savePlayerData();
+                    // 立即设置生命加成缓存
+                    GemCore.healthBonusCache.put(player.getName(), 5 * lifeGem.getLevel());
+                    // 重新设置最大生命值
+                    player.setHealthScale(20 + 5 * lifeGem.getLevel());
+                    player.setMaxHealth(20 + 5 * lifeGem.getLevel());
+                    player.setHealth(20 + 5 * lifeGem.getLevel());
+                } else {
+                    SurvivalExpert.getInstance().getPlayerData().set(player.getName() + ".life.gem", null);
+                    SurvivalExpert.getInstance().savePlayerData();
+                    // 立即设置生命加成缓存
+                    GemCore.healthBonusCache.put(player.getName(), 0);
+                    // 重新设置最大生命值
+                    player.setHealthScale(20);
+                    player.setMaxHealth(20);
+                    player.setHealth(20);
                 }
             }
         }

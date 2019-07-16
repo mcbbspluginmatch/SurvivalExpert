@@ -14,7 +14,7 @@ import java.util.List;
 public class UpgradeMenu {
 
 	public static Inventory generate() {
-		Inventory menu = Bukkit.createInventory(new UpgradeMenuHolder(), InventoryType.DROPPER, SurvivalExpert.getInstance().getConfig().getString("menu.upgrade.title", "&b&lGem upgrade").replace("&", "§"));
+		Inventory menu = Bukkit.createInventory(new UpgradeMenuHolder(), InventoryType.DROPPER, SurvivalExpert.getInstance().getConfig().getString("menu.upgrade.title", "&6&lGem upgrade").replace("&", "§"));
 
 		// 填充角
 		int[] cornerPosition = new int[]{1, 3, 5};

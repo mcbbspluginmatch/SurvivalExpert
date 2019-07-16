@@ -13,7 +13,7 @@ import java.util.List;
 public class MainMenu {
 
 	public static Inventory generate(Player player) {
-		Inventory menu = Bukkit.createInventory(new MainMenuHolder(), 45, SurvivalExpert.getInstance().getConfig().getString("menu.main.title", "&b&lSurvival Expert").replace("&", "§"));
+		Inventory menu = Bukkit.createInventory(new MainMenuHolder(), 45, SurvivalExpert.getInstance().getConfig().getString("menu.main.title", "&6&lSurvival Expert").replace("&", "§"));
 
 		// 填充角
 		int cornerPosition[] = new int[]{ 0, 4, 8, 36, 40, 44 };

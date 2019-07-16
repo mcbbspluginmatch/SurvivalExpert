@@ -16,7 +16,7 @@ import java.util.List;
 public class EquipMenu {
 
 	public static Inventory generate(Player player) {
-		Inventory menu = Bukkit.createInventory(new EquipMenuHolder(), InventoryType.HOPPER, SurvivalExpert.getInstance().getConfig().getString("menu.equip.title", "&b&lGem equip").replace("&", "§"));
+		Inventory menu = Bukkit.createInventory(new EquipMenuHolder(), InventoryType.HOPPER, SurvivalExpert.getInstance().getConfig().getString("menu.equip.title", "&6&lGem equip").replace("&", "§"));
 
 		// 填充角
 		int[] cornerPosition = new int[]{2};

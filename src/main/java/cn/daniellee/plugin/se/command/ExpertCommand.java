@@ -67,9 +67,11 @@ public class ExpertCommand implements CommandExecutor {
 						gemItemStack.setAmount(number);
 						targetPlayer.getInventory().addItem(gemItemStack);
 						if (targetPlayer.getInventory().contains(gemItemStack)) {
+							commandSender.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.give-success", "&eSuccessfully give the gem to the target player.")).replace("&", "§"));
 							targetPlayer.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.give-gem", "&eYou have got &b{number} &elevels &b{level} {type} &egems.").replace("{number}", Integer.toString(number)).replace("{level}", Integer.toString(targetLevel)).replace("{type}", SurvivalExpert.getInstance().getConfig().getString("message.type." + gemInfo.getType().toLowerCase(), "Battle".equals(gemInfo.getType()) ? "&dBattle" : "&aLife"))).replace("&", "§"));
 						} else{
-							targetPlayer.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.inventory-full", "&eYour inventory is full, you can't get the gems given.")).replace("&", "§"));
+							commandSender.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.give-failed", "&eTarget player's inventory is full, execution failed.")).replace("&", "§"));
+							targetPlayer.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.inventory-full", "&eYour inventory is full and you can't get the target item.")).replace("&", "§"));
 						}
 					} else commandSender.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.invalid-param", "&eInvalid parameter, please check and try again.")).replace("&", "§"));
 				} else commandSender.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.invalid-player", "&eTarget player is not online.")).replace("&", "§"));
