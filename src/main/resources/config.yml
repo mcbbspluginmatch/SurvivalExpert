@@ -206,7 +206,7 @@ setting:
   #作物配置
   crop:
     #作物方块配置
-    blocks: WHEAT,CARROTS,POTATOS,BEETROOTS,COCOA,NETHER_WARTS,CHORUS_FLOWER,SUGAR_CANE,PUMPKIN,MELON,CACTUS
+    blocks: WHEAT,CARROTS,POTATOS,BEETROOTS,COCOA,NETHER_WARTS,CHORUS_FLOWER,SUGAR_CANE,PUMPKIN,MELON,CACTUS,BAMBOO
     #获取生命点数的几率
     chance: 0.1
 
@@ -220,6 +220,7 @@ message:
   give-success: '&e成功将宝石给予目标玩家'
   give-failed: '&e目标玩家背包已满， 执行失败'
   points-modify: '&e你的 {type} &e点数已被修改为 &b{number}'
+  modify-success: '&e操作成功完成'
   exchage-success: '&e成功兑换 &b{number} &e个 {type} &e宝石'
   get-shortcut: '&e成功将快捷方式添加至你的背包'
   player-only: '&e控制台无法打开GUI菜单'

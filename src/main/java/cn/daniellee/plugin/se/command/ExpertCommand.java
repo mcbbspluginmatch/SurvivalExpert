@@ -14,6 +14,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public class ExpertCommand implements CommandExecutor {
@@ -65,8 +66,7 @@ public class ExpertCommand implements CommandExecutor {
 							if (number > 64) number = 64;
 						}
 						gemItemStack.setAmount(number);
-						targetPlayer.getInventory().addItem(gemItemStack);
-						if (targetPlayer.getInventory().contains(gemItemStack)) {
+						if (targetPlayer.getInventory().addItem(gemItemStack).isEmpty()) {
 							commandSender.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.give-success", "&eSuccessfully give the gem to the target player.")).replace("&", "§"));
 							targetPlayer.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.give-gem", "&eYou have got &b{number} &elevels &b{level} {type} &egems.").replace("{number}", Integer.toString(number)).replace("{level}", Integer.toString(targetLevel)).replace("{type}", SurvivalExpert.getInstance().getConfig().getString("message.type." + gemInfo.getType().toLowerCase(), "Battle".equals(gemInfo.getType()) ? "&dBattle" : "&aLife"))).replace("&", "§"));
 						} else{
@@ -89,6 +89,7 @@ public class ExpertCommand implements CommandExecutor {
 							SurvivalExpert.getInstance().getPlayerData().set(path + ".used", result);
 						}
 						SurvivalExpert.getInstance().savePlayerData();
+						commandSender.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.modify-success", "&eOperation completed successfully.")).replace("&", "§"));
 						targetPlayer.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.points-modify", "&eYour {type} &epoints have been modified to &b{number}.").replace("{type}", SurvivalExpert.getInstance().getConfig().getString("message.type." + strings[2].toLowerCase(), "battle".equals(strings[2].toLowerCase()) ? "&dBattle" : "&aLife")).replace("{number}", Integer.toString(result))).replace("&", "§"));
 					} else {
 						commandSender.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.invalid-param", "&eInvalid parameter, please check and try again.")).replace("&", "§"));

@@ -79,7 +79,7 @@ public class PlayerListener implements Listener {
 		Integer age = SurvivalExpert.getInstance().getAgeCheckBlock().get(itemType);
 		if (age != null) {
 			String blockData = e.getBlock().getBlockData().getAsString();
-			if (!Integer.valueOf(blockData.substring(blockData.indexOf("age=") + 4, blockData.indexOf("age=") + 5)).equals(age)) {
+			if (Integer.valueOf(blockData.substring(blockData.indexOf("age=") + 4, blockData.indexOf("age=") + 5)) < age) {
 				// 如果方块Age没达到要求
 				return;
 			}

@@ -44,8 +44,7 @@ public class MenuListener implements Listener {
                         List<String> shortcutLore = SurvivalExpert.getInstance().getConfig().getStringList("gem.shortcut.lore");
                         shortcutLore.add(0, GemCore.SHORTCUT_LORE);
                         ItemStack shortcut = ItemGenerator.getItem(SurvivalExpert.getInstance().getConfig().getString("gem.shortcut.name", "&7[&6SurvivalExpert&7]&bGem equipment bar"), shortcutLore, SurvivalExpert.getInstance().getConfig().getString("gem.shortcut.item.material", "SNOWBALL"), SurvivalExpert.getInstance().getConfig().getInt("gem.shortcut.item.durability", 0));
-                        player.getInventory().addItem(shortcut);
-                        if (player.getInventory().contains(shortcut)){
+                        if (player.getInventory().addItem(shortcut).isEmpty()){
                             player.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.get-shortcut", "&eSuccessfully add shortcut to your inventory.")).replace("&", "§"));
                         } else {
                             player.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.inventory-full", "&eYour inventory is full and you can't get the target item.")).replace("&", "§"));
@@ -63,16 +62,18 @@ public class MenuListener implements Listener {
                     if (canExchange > 0) {
                         ItemStack battleGem = GemCore.getGemItemStack(new GemInfo("Battle", 1));
                         if (e.getClick().isLeftClick()) {
-                            player.getInventory().addItem(battleGem);
-                            SurvivalExpert.getInstance().getPlayerData().set(player.getName() + ".battle.used", battleUsed + exchangeRatio);
-                            SurvivalExpert.getInstance().savePlayerData();
-                            player.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.exchage-success", "&eSuccessfully exchange &b{number} {type} &egems.").replace("{number}", Integer.toString(1)).replace("{type}", SurvivalExpert.getInstance().getConfig().getString("message.type.battle", "&dBattle"))).replace("&", "§"));
+                            if (player.getInventory().addItem(battleGem).isEmpty()) {
+                                SurvivalExpert.getInstance().getPlayerData().set(player.getName() + ".battle.used", battleUsed + exchangeRatio);
+                                SurvivalExpert.getInstance().savePlayerData();
+                                player.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.exchage-success", "&eSuccessfully exchange &b{number} {type} &egems.").replace("{number}", Integer.toString(1)).replace("{type}", SurvivalExpert.getInstance().getConfig().getString("message.type.battle", "&dBattle"))).replace("&", "§"));
+                            } else player.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.inventory-full", "&eYour inventory is full and you can't get the target item.")).replace("&", "§"));
                         } else if (e.getClick().isRightClick()) {
                             battleGem.setAmount(canExchange);
-                            player.getInventory().addItem(battleGem);
-                            SurvivalExpert.getInstance().getPlayerData().set(player.getName() + ".battle.used", battleUsed + exchangeRatio * canExchange);
-                            SurvivalExpert.getInstance().savePlayerData();
-                            player.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.exchage-success", "&eSuccessfully exchange &b{number} {type} &egems.").replace("{number}", Integer.toString(canExchange)).replace("{type}", SurvivalExpert.getInstance().getConfig().getString("message.type.battle", "&dBattle"))).replace("&", "§"));
+                            if (player.getInventory().addItem(battleGem).isEmpty()) {
+                                SurvivalExpert.getInstance().getPlayerData().set(player.getName() + ".battle.used", battleUsed + exchangeRatio * canExchange);
+                                SurvivalExpert.getInstance().savePlayerData();
+                                player.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.exchage-success", "&eSuccessfully exchange &b{number} {type} &egems.").replace("{number}", Integer.toString(canExchange)).replace("{type}", SurvivalExpert.getInstance().getConfig().getString("message.type.battle", "&dBattle"))).replace("&", "§"));
+                            } else player.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.inventory-full", "&eYour inventory is full and you can't get the target item.")).replace("&", "§"));
                         }
                     } else player.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.not-enough", "&eYour points are not enough to exchange.")).replace("&", "§"));
                 } else if (e.getRawSlot() == 31) {
@@ -85,16 +86,18 @@ public class MenuListener implements Listener {
                     if (canExchange > 0) {
                         ItemStack lifeGem = GemCore.getGemItemStack(new GemInfo("Life", 1));
                         if (e.getClick().isLeftClick()) {
-                            player.getInventory().addItem(lifeGem);
-                            SurvivalExpert.getInstance().getPlayerData().set(player.getName() + ".life.used", lifeUsed + exchangeRatio);
-                            SurvivalExpert.getInstance().savePlayerData();
-                            player.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.exchage-success", "&eSuccessfully exchange &b{number} {type} &egems.").replace("{number}", Integer.toString(1)).replace("{type}", SurvivalExpert.getInstance().getConfig().getString("message.type.life", "&aLife"))).replace("&", "§"));
+                            if (player.getInventory().addItem(lifeGem).isEmpty()) {
+                                SurvivalExpert.getInstance().getPlayerData().set(player.getName() + ".life.used", lifeUsed + exchangeRatio);
+                                SurvivalExpert.getInstance().savePlayerData();
+                                player.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.exchage-success", "&eSuccessfully exchange &b{number} {type} &egems.").replace("{number}", Integer.toString(1)).replace("{type}", SurvivalExpert.getInstance().getConfig().getString("message.type.life", "&aLife"))).replace("&", "§"));
+                            } else player.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.inventory-full", "&eYour inventory is full and you can't get the target item.")).replace("&", "§"));
                         } else if (e.getClick().isRightClick()) {
                             lifeGem.setAmount(canExchange);
-                            player.getInventory().addItem(lifeGem);
-                            SurvivalExpert.getInstance().getPlayerData().set(player.getName() + ".life.used", lifeUsed + exchangeRatio * canExchange);
-                            SurvivalExpert.getInstance().savePlayerData();
-                            player.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.exchage-success", "&eSuccessfully exchange &b{number} {type} &egems.").replace("{number}", Integer.toString(canExchange)).replace("{type}", SurvivalExpert.getInstance().getConfig().getString("message.type.life", "&aLife"))).replace("&", "§"));
+                            if (player.getInventory().addItem(lifeGem).isEmpty()) {
+                                SurvivalExpert.getInstance().getPlayerData().set(player.getName() + ".life.used", lifeUsed + exchangeRatio * canExchange);
+                                SurvivalExpert.getInstance().savePlayerData();
+                                player.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.exchage-success", "&eSuccessfully exchange &b{number} {type} &egems.").replace("{number}", Integer.toString(canExchange)).replace("{type}", SurvivalExpert.getInstance().getConfig().getString("message.type.life", "&aLife"))).replace("&", "§"));
+                            } else player.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.inventory-full", "&eYour inventory is full and you can't get the target item.")).replace("&", "§"));
                         }
                     } else player.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.not-enough", "&eYour points are not enough to exchange.")).replace("&", "§"));
                 }

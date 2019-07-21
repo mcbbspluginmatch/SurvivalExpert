@@ -60,6 +60,8 @@ public class SurvivalExpert extends JavaPlugin {
 		ageCheckBlock.put("COCOA", 2);
 		ageCheckBlock.put("NETHER_WARTS", 3);
 		ageCheckBlock.put("CHORUS_FLOWER", 5);
+		ageCheckBlock.put("SUGAR_CANE", 1);
+		ageCheckBlock.put("BAMBOO", 1);
 
 		covertItemBlock.put("CARROTS", "CARROT");
 		covertItemBlock.put("POTATOS", "POTATO");
@@ -82,7 +84,7 @@ public class SurvivalExpert extends JavaPlugin {
 		}
 		prefix = "&7[&6" + getConfig().get("prompt-prefix", "SurvivalExpert") + "&7] &3: &r";
 		oreBlocks = Arrays.asList(getConfig().getString("setting.ore.blocks", "COAL_ORE,IRON_ORE,GOLD_ORE,DIAMOND_ORE,EMERALD_ORE,LAPIS_ORE,REDSTONE_ORE,NETHER_QUARTZ_ORE").split(","));
-		cropBlocks = Arrays.asList(getConfig().getString("setting.crop.blocks", "WHEAT,CARROTS,POTATOS,BEETROOTS,COCOA,NETHER_WARTS,CHORUS_FLOWER,SUGAR_CANE,PUMPKIN,MELON,CACTUS").split(","));
+		cropBlocks = Arrays.asList(getConfig().getString("setting.crop.blocks", "WHEAT,CARROTS,POTATOS,BEETROOTS,COCOA,NETHER_WARTS,CHORUS_FLOWER,SUGAR_CANE,PUMPKIN,MELON,CACTUS,BAMBOO").split(","));
 		double orePointChange = getConfig().getDouble("setting.ore.chance", 1);
 		if (orePointChange > 1 || orePointChange < 0.01) {
 			getLogger().info("&5[Qualifying]&dThe chance can only be between 0.01 and 1, it is automatically set to 1.".replace("&", "§"));
