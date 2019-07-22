@@ -2,9 +2,9 @@ package cn.daniellee.plugin.se.menu;
 
 import cn.daniellee.plugin.se.SurvivalExpert;
 import cn.daniellee.plugin.se.component.ItemGenerator;
-import cn.daniellee.plugin.se.menu.holder.EnumMenuHolder;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 
 import java.util.List;
 
@@ -41,5 +41,10 @@ public class EnumMenu {
 		return menu;
 	}
 
-
+	public static class EnumMenuHolder implements InventoryHolder {
+		@Override
+		public Inventory getInventory() {
+			return Bukkit.createInventory(null, 45);
+		}
+	}
 }

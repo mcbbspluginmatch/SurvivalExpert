@@ -16,6 +16,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class ExpertCommand implements CommandExecutor {
 
@@ -37,7 +38,12 @@ public class ExpertCommand implements CommandExecutor {
 			// 显示排行GUI
 			} else if (strings[0].equalsIgnoreCase("ranking") && commandSender instanceof Player) {
 				Player player = (Player) commandSender;
-				player.openInventory(RankingMenu.generate(player));
+				new BukkitRunnable() {
+					@Override
+					public void run() {
+						player.openInventory(RankingMenu.generate(player));
+					}
+				}.runTask(SurvivalExpert.getInstance());
 			// 显示展示GUI
 			} else if (strings[0].equalsIgnoreCase("enum") && commandSender instanceof Player) {
 				Player player = (Player) commandSender;

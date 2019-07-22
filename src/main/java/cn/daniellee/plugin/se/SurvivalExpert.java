@@ -18,6 +18,8 @@ import java.util.Map;
 
 public class SurvivalExpert extends JavaPlugin {
 
+	public static final int RANDOM_CALC_BASE = 10000;
+
 	private static SurvivalExpert instance;
 
 	private String prefix;
@@ -25,6 +27,10 @@ public class SurvivalExpert extends JavaPlugin {
 	private File playerFile = new File(getDataFolder(), "player.yml");
 
 	private FileConfiguration playerData = new YamlConfiguration();
+
+	private BigDecimal battleBonusPercentage;
+
+	private BigDecimal lifeBonusPercentage;
 
 	private List<String> oreBlocks;
 
@@ -83,6 +89,8 @@ public class SurvivalExpert extends JavaPlugin {
 			e.printStackTrace();
 		}
 		prefix = "&7[&6" + getConfig().get("prompt-prefix", "SurvivalExpert") + "&7] &3: &r";
+		battleBonusPercentage = new BigDecimal(getConfig().getDouble("gem.battle.bonus-percentage", 0.1));
+		lifeBonusPercentage = new BigDecimal(getConfig().getDouble("gem.life.bonus-percentage", 0.1));
 		oreBlocks = Arrays.asList(getConfig().getString("setting.ore.blocks", "COAL_ORE,IRON_ORE,GOLD_ORE,DIAMOND_ORE,EMERALD_ORE,LAPIS_ORE,REDSTONE_ORE,NETHER_QUARTZ_ORE").split(","));
 		cropBlocks = Arrays.asList(getConfig().getString("setting.crop.blocks", "WHEAT,CARROTS,POTATOS,BEETROOTS,COCOA,NETHER_WARTS,CHORUS_FLOWER,SUGAR_CANE,PUMPKIN,MELON,CACTUS,BAMBOO").split(","));
 		double orePointChange = getConfig().getDouble("setting.ore.chance", 1);
@@ -91,13 +99,13 @@ public class SurvivalExpert extends JavaPlugin {
 			orePointChange = 1;
 		}
 		// 计算几率范围
-		orePointRange = new BigDecimal(orePointChange).multiply(new BigDecimal(100)).intValue();
+		orePointRange = new BigDecimal(orePointChange).multiply(new BigDecimal(RANDOM_CALC_BASE)).intValue();
 		double cropPointChange = getConfig().getDouble("setting.crop.chance", 1);
 		if (cropPointChange > 1 || cropPointChange < 0.01) {
 			getLogger().info("&5[Qualifying]&dThe chance can only be between 0.01 and 1, it is automatically set to 1.".replace("&", "§"));
 			cropPointChange = 1;
 		}
-		cropPointRange = new BigDecimal(cropPointChange).multiply(new BigDecimal(100)).intValue();
+		cropPointRange = new BigDecimal(cropPointChange).multiply(new BigDecimal(RANDOM_CALC_BASE)).intValue();
 		saveDefaultConfig();
 	}
 
@@ -129,6 +137,14 @@ public class SurvivalExpert extends JavaPlugin {
 			getLogger().info(" ");
 			e.printStackTrace();
 		}
+	}
+
+	public BigDecimal getBattleBonusPercentage() {
+		return battleBonusPercentage;
+	}
+
+	public BigDecimal getLifeBonusPercentage() {
+		return lifeBonusPercentage;
 	}
 
 	public List<String> getOreBlocks() {

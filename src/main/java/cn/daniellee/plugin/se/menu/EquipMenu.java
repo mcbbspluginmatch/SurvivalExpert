@@ -3,12 +3,12 @@ package cn.daniellee.plugin.se.menu;
 import cn.daniellee.plugin.se.SurvivalExpert;
 import cn.daniellee.plugin.se.component.ItemGenerator;
 import cn.daniellee.plugin.se.core.GemCore;
-import cn.daniellee.plugin.se.menu.holder.EquipMenuHolder;
 import cn.daniellee.plugin.se.model.GemInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
@@ -54,4 +54,10 @@ public class EquipMenu {
 		return ItemGenerator.getItem(SurvivalExpert.getInstance().getConfig().getString("menu.equip.slot." + type.toLowerCase() + ".name", ("Battle".equals(type) ? "&d" : "&a") + type + " &bgem slot"), slotLore, SurvivalExpert.getInstance().getConfig().getString("menu.equip.slot." + type.toLowerCase() + ".item.material", "WHITE_STAINED_GLASS_PANE"), SurvivalExpert.getInstance().getConfig().getInt("menu.equip.slot." + type.toLowerCase() + ".item.durability", 0));
 	}
 
+	public static class EquipMenuHolder implements InventoryHolder {
+		@Override
+		public Inventory getInventory() {
+			return Bukkit.createInventory(null, InventoryType.HOPPER);
+		}
+	}
 }

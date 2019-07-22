@@ -9,12 +9,15 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
+import java.math.BigDecimal;
 import java.util.Random;
 
 public class PlayerListener implements Listener {
@@ -23,7 +26,7 @@ public class PlayerListener implements Listener {
 
 	/**
 	 * 加入时刷新最大血量
-	 * @param e
+	 * @param e 事件
 	 */
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent e) {
@@ -32,7 +35,7 @@ public class PlayerListener implements Listener {
 
 	/**
 	 * 复活时刷新最大血量
-	 * @param e
+	 * @param e 事件
 	 */
 	@EventHandler
 	public void onPlayerRespawn(PlayerRespawnEvent e) {
@@ -40,11 +43,16 @@ public class PlayerListener implements Listener {
 	}
 
 	private void refreshMaxHealth(Player player) {
-		int maxHealth = 20 + GemCore.getHealthBonus(player.getName());
-		player.setHealthScale(maxHealth);
-		player.setMaxHealth(maxHealth);
-		player.setHealth(maxHealth);
+		player.setHealthScale(20);
+		player.setMaxHealth(20);
+		player.setHealth(20);
 	}
+
+
+
+
+
+
 
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent e) {
@@ -53,7 +61,7 @@ public class PlayerListener implements Listener {
 			if (killerStr.contains(" ")) killerStr = killerStr.substring(0, killerStr.indexOf(" "));
 			Player killer = Bukkit.getPlayer(killerStr);
 			if (killer != null) {
-				Bukkit.broadcastMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.boardcast.kill", "&c{killer} &ecarries &b{battleLevel} &elevel {battle} &egems &b{lifeLevel} &elevel {life} &egems killed &c{dead}.").replace("{killer}", killer.getName()).replace("{battleLevel}", Integer.toString(GemCore.getDamageBonus(killer.getName()) / 5)).replace("{battle}", SurvivalExpert.getInstance().getConfig().getString("message.type.battle", "&dBattle")).replace("{lifeLevel}", Integer.toString(GemCore.getHealthBonus(killer.getName()) / 5)).replace("{life}", SurvivalExpert.getInstance().getConfig().getString("message.type.life", "&aLife")).replace("{dead}", e.getEntity().getName())).replace("&", "§"));
+				Bukkit.broadcastMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.boardcast.kill", "&c{killer} &ecarries &b{battleLevel} &elevel {battle} &egems &b{lifeLevel} &elevel {life} &egems killed &c{dead}.").replace("{killer}", killer.getName()).replace("{battleLevel}", Integer.toString(GemCore.getBattleLevel(killer.getName()))).replace("{battle}", SurvivalExpert.getInstance().getConfig().getString("message.type.battle", "&dBattle")).replace("{lifeLevel}", Integer.toString(GemCore.getLifeLevel(killer.getName()))).replace("{life}", SurvivalExpert.getInstance().getConfig().getString("message.type.life", "&aLife")).replace("{dead}", e.getEntity().getName())).replace("&", "§"));
 			}
 		}
 	}
@@ -85,7 +93,7 @@ public class PlayerListener implements Listener {
 			}
 		}
 		if (SurvivalExpert.getInstance().getOreBlocks().contains(itemType)) {
-			if (random.nextInt(100) < SurvivalExpert.getInstance().getOrePointRange()) {
+			if (random.nextInt(SurvivalExpert.RANDOM_CALC_BASE) < SurvivalExpert.getInstance().getOrePointRange()) {
 				String path = player.getName() + ".battle.total";
 				int targetPoints = SurvivalExpert.getInstance().getPlayerData().getInt(path, 0) + 1;
 				SurvivalExpert.getInstance().getPlayerData().set(path, targetPoints);
@@ -94,7 +102,7 @@ public class PlayerListener implements Listener {
 			}
 		}
 		if (SurvivalExpert.getInstance().getCropBlocks().contains(itemType)) {
-			if (random.nextInt(100) < SurvivalExpert.getInstance().getCropPointRange()) {
+			if (random.nextInt(SurvivalExpert.RANDOM_CALC_BASE) < SurvivalExpert.getInstance().getCropPointRange()) {
 				String path = player.getName() + ".life.total";
 				int targetPoints = SurvivalExpert.getInstance().getPlayerData().getInt(path, 0) + 1;
 				SurvivalExpert.getInstance().getPlayerData().set(path, targetPoints);
@@ -108,11 +116,36 @@ public class PlayerListener implements Listener {
 	 * 在打出伤害时根据装备的宝石进行伤害加成
 	 * @param e 事件
 	 */
-	@EventHandler
+	@EventHandler(priority=EventPriority.HIGHEST)
 	public void onEntityDamageByEntity(EntityDamageByEntityEvent e) {
-		if ((e.getDamager() instanceof Player)) {
+		if (e.getDamager() instanceof Player) {
 			Player damager = (Player) e.getDamager();
-			e.setDamage(e.getDamage() + GemCore.getDamageBonus(damager.getName()));
+			e.setDamage(new BigDecimal(e.getDamage()).multiply(new BigDecimal(GemCore.getBattleLevel(damager.getName())).multiply(SurvivalExpert.getInstance().getBattleBonusPercentage()).add(new BigDecimal(1))).doubleValue());
+		}
+		if (e.getEntity() instanceof Player) {
+			Player entity = (Player) e.getEntity();
+			double damage = new BigDecimal(e.getDamage()).multiply(new BigDecimal(1).subtract(new BigDecimal(GemCore.getLifeLevel(entity.getName())).multiply(SurvivalExpert.getInstance().getLifeBonusPercentage()))).doubleValue();
+			e.setDamage(damage > 0 ? damage : 0);
+		}
+	}
+
+	@EventHandler(priority=EventPriority.HIGHEST)
+	public void onEntityDamageByEntity(EntityDamageEvent e) {
+		if (e.getCause() == EntityDamageEvent.DamageCause.FALL) {
+			if (e.getEntity() instanceof Player) {
+				Player entity = (Player) e.getEntity();
+				double damage = new BigDecimal(e.getDamage()).multiply(new BigDecimal(1).subtract(new BigDecimal(GemCore.getLifeLevel(entity.getName())).multiply(SurvivalExpert.getInstance().getLifeBonusPercentage()))).doubleValue();
+				e.setDamage(damage > 0 ? damage : 0);
+			}
+		}
+	}
+
+	@EventHandler(priority=EventPriority.HIGHEST)
+	public void onEntityDamageByEntity(EntityDamageByBlockEvent e) {
+		if (e.getEntity() instanceof Player) {
+			Player entity = (Player) e.getEntity();
+			double damage = new BigDecimal(e.getDamage()).multiply(new BigDecimal(1).subtract(new BigDecimal(GemCore.getLifeLevel(entity.getName())).multiply(SurvivalExpert.getInstance().getLifeBonusPercentage()))).doubleValue();
+			e.setDamage(damage > 0 ? damage : 0);
 		}
 	}
 

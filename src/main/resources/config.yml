@@ -18,8 +18,8 @@ menu:
       equip:
         name: '&b宝石装备'
         lore:
-          - '&e装备&d战斗&e宝石以提升&d伤害值'
-          - '&e装备&a生命&e宝石以提升&a生命值'
+          - '&e装备&d战斗&e宝石以提升&d打出伤害'
+          - '&e装备&a生命&e宝石以降低&a所受伤害'
           - ''
           - '&3左键打开 &1| &3右键获取快捷方式'
         item:
@@ -86,18 +86,18 @@ menu:
       battle:
         name: '&d战斗&b宝石槽'
         lore:
-          - '&e请将你的战斗宝石放在'
-          - '&e此处， 放入后将根据宝'
-          - '&e石等级获得攻击力加成'
+          - '&e将你的战斗宝石放在此处'
+          - '&e放入后将获得百分之十乘'
+          - '&e宝石等级的打出伤害加成'
         item:
           material: WHITE_STAINED_GLASS_PANE
           durability: 0
       life:
         name: '&a生命&b宝石槽'
         lore:
-          - '&e请将你的战斗宝石放在'
-          - '&e此处， 放入后将根据宝'
-          - '&e石等级获得攻击力加成'
+          - '&e将你的战斗宝石放在此处'
+          - '&e放入后将获得百分之十乘'
+          - '&e宝石等级的所受伤害减免'
         item:
           material: WHITE_STAINED_GLASS_PANE
           durability: 0
@@ -165,24 +165,24 @@ gem:
     lore:
       - '&e这是由生存者的劳动凝成的精华'
       - '&e由挖掘矿物产生的战斗点数换得'
-      - '&e装备后提供等级乘五的伤害加成'
+      - '&e提供等级乘百分之十的伤害加成'
     item:
       material: MAGMA_CREAM
       durability: 0
-    #每级伤害值加成
-    bonus: 5
+    #每级伤害值加成比率
+    bonus-percentage: 0.1
   #生命宝石
   life:
-    name: '&7[&6生存专家&7]&a生存&b宝石&7[&eLv.{level}&7]'
+    name: '&7[&6生存专家&7]&a生命&b宝石&7[&eLv.{level}&7]'
     lore:
       - '&e这是由生存者的劳动凝成的精华'
       - '&e由采集作物产生的生存点数换得'
-      - '&e装备后提供等级乘五的生命加成'
+      - '&e提供等级乘百分之十的伤害减免'
     item:
       material: SLIME_BALL
       durability: 0
-    #每级生命值加成
-    bonus: 5
+    #每级伤害值减免比率
+    bonus-percentage: 0.1
   shortcut:
     name: '&7[&6生存专家&7]&b宝石装备栏'
     lore:
@@ -195,7 +195,7 @@ gem:
 setting:
   #点数兑换比例
   point-exchange-ratio: 100
-  #成功率基数，每级成功率为基数的原等级次方，入2级升3级，成功率是0.8的2次方0.64
+  #成功率基数，每级成功率为基数的原等级次方，如2级升3级，成功率是0.8的2次方0.64
   success-rate-base: 0.8
   #矿物配置
   ore:

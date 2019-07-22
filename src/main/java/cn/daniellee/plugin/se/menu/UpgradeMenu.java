@@ -3,10 +3,10 @@ package cn.daniellee.plugin.se.menu;
 import cn.daniellee.plugin.se.SurvivalExpert;
 import cn.daniellee.plugin.se.component.ItemGenerator;
 import cn.daniellee.plugin.se.core.GemCore;
-import cn.daniellee.plugin.se.menu.holder.UpgradeMenuHolder;
 import org.bukkit.Bukkit;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
@@ -40,4 +40,10 @@ public class UpgradeMenu {
 		return ItemGenerator.getItem(SurvivalExpert.getInstance().getConfig().getString("menu.upgrade.rate.name", "&bSuccess rate [ &e{rate} &b]").replace("{rate}", rate), rateLore, SurvivalExpert.getInstance().getConfig().getString("menu.upgrade.rate.item.material", "HOPPER"), SurvivalExpert.getInstance().getConfig().getInt("menu.upgrade.rate.item.durability", 0));
 	}
 
+	public static class UpgradeMenuHolder implements InventoryHolder {
+		@Override
+		public Inventory getInventory() {
+			return Bukkit.createInventory(null, InventoryType.DROPPER);
+		}
+	}
 }

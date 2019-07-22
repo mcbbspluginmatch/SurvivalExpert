@@ -2,11 +2,10 @@ package cn.daniellee.plugin.se.menu;
 
 import cn.daniellee.plugin.se.SurvivalExpert;
 import cn.daniellee.plugin.se.component.ItemGenerator;
-import cn.daniellee.plugin.se.menu.holder.MainMenuHolder;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 
 import java.util.List;
 
@@ -48,4 +47,10 @@ public class MainMenu {
 	}
 
 
+	public static class MainMenuHolder implements InventoryHolder {
+		@Override
+		public Inventory getInventory() {
+			return Bukkit.createInventory(null, 45);
+		}
+	}
 }

@@ -2,11 +2,11 @@ package cn.daniellee.plugin.se.menu;
 
 import cn.daniellee.plugin.se.SurvivalExpert;
 import cn.daniellee.plugin.se.component.ItemGenerator;
-import cn.daniellee.plugin.se.menu.holder.RankingMenuHolder;
 import cn.daniellee.plugin.se.model.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -90,11 +90,17 @@ public class RankingMenu {
 			}
 		}
 		List<String> mineLore = SurvivalExpert.getInstance().getConfig().getStringList("menu.ranking.mine.lore");
-		if (mineLore != null && !mineLore.isEmpty()) for (int i = 0; i < mineLore.size(); i++) mineLore.set(i, mineLore.get(i).replace("{battleTotal}", Integer.toString(SurvivalExpert.getInstance().getPlayerData().getInt(player.getName() + ".battle.total", 0))).replace("{battleRank}", Integer.toString(battleRanking)).replace("{lifeTotal}", Integer.toString(SurvivalExpert.getInstance().getPlayerData().getInt(player.getName() + ".life.total", 0))).replace("{lifeRank}", Integer.toString(lifeRanking)));
+		if (mineLore != null && !mineLore.isEmpty()) for (int i = 0; i < mineLore.size(); i++) mineLore.set(i, mineLore.get(i).replace("{battleTotal}", Integer.toString(SurvivalExpert.getInstance().getPlayerData().getInt(player.getName() + ".battle.total", 0))).replace("{battleRank}", Integer.toString(battleRanking + 1)).replace("{lifeTotal}", Integer.toString(SurvivalExpert.getInstance().getPlayerData().getInt(player.getName() + ".life.total", 0))).replace("{lifeRank}", Integer.toString(lifeRanking + 1)));
 		menu.setItem(22, ItemGenerator.getSkullItem(player.getName(), SurvivalExpert.getInstance().getConfig().getString("menu.ranking.mine.name", "&bMy ranking"), mineLore));
 
 		return menu;
 	}
 
 
+	public static class RankingMenuHolder implements InventoryHolder {
+		@Override
+		public Inventory getInventory() {
+			return Bukkit.createInventory(null, 45);
+		}
+	}
 }

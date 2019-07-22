@@ -21,26 +21,26 @@ public class GemCore {
 
 	public static final Pattern GEM_LORE_PATTERN = Pattern.compile("^§3SurvivalExpert:(Battle|Life):\\d+$");
 
-	public static Map<String, Integer> damageBonusCache = new HashMap<>();
+	public static Map<String, Integer> battleLevelCache = new HashMap<>();
 
-	public static Map<String, Integer> healthBonusCache = new HashMap<>();
+	public static Map<String, Integer> lifeLevelCache = new HashMap<>();
 
-	public static int getDamageBonus(String name) {
-		Integer damageBonus = GemCore.damageBonusCache.get(name);
-		if (damageBonus == null) {
-			damageBonus = SurvivalExpert.getInstance().getPlayerData().getInt(name + ".battle.gem", 0) * 5;
-			GemCore.damageBonusCache.put(name, damageBonus);
+	public static int getBattleLevel(String name) {
+		Integer battleLevel = GemCore.battleLevelCache.get(name);
+		if (battleLevel == null) {
+			battleLevel = SurvivalExpert.getInstance().getPlayerData().getInt(name + ".battle.gem", 0);
+			GemCore.battleLevelCache.put(name, battleLevel);
 		}
-		return damageBonus;
+		return battleLevel;
 	}
 
-	public static int getHealthBonus(String name) {
-		Integer healthBonus = GemCore.healthBonusCache.get(name);
-		if (healthBonus == null) {
-			healthBonus = SurvivalExpert.getInstance().getPlayerData().getInt(name + ".life.gem", 0) * 5;
-			GemCore.healthBonusCache.put(name, healthBonus);
+	public static int getLifeLevel(String name) {
+		Integer lifeLevel = GemCore.lifeLevelCache.get(name);
+		if (lifeLevel == null) {
+			lifeLevel = SurvivalExpert.getInstance().getPlayerData().getInt(name + ".life.gem", 0);
+			GemCore.lifeLevelCache.put(name, lifeLevel);
 		}
-		return healthBonus;
+		return lifeLevel;
 	}
 
 	public static ItemStack getGemItemStack(GemInfo gemInfo) {
