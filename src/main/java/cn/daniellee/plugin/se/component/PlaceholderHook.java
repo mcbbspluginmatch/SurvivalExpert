@@ -1,6 +1,7 @@
 package cn.daniellee.plugin.se.component;
 
 import cn.daniellee.plugin.se.SurvivalExpert;
+import cn.daniellee.plugin.se.core.GemCore;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 
@@ -46,15 +47,18 @@ public class PlaceholderHook extends PlaceholderExpansion {
 		if (player == null) return "";
 
 		switch (identifier) {
-//			case "title":
-//				int segment = plugin.getPlayerData().getInt(player.getName() + ".segment", 0);
-//				return BattleCore.segmentToTitle(segment);
-//			case "score":
-//				int score = plugin.getPlayerData().getInt(player.getName() + ".score", 0);
-//				return String.valueOf(score);
-//			case "times":
-//				int times = plugin.getPlayerData().getInt(player.getName() + ".times", 0);
-//				return String.valueOf(times);
+			case "battle_gem":
+				return Integer.toString(GemCore.getBattleLevel(player.getName()));
+			case "life_gem":
+				return Integer.toString(GemCore.getLifeLevel(player.getName()));
+			case "battle_total":
+				return Integer.toString(SurvivalExpert.getInstance().getPlayerData().getInt(player.getName() + ".battle.total", 0));
+			case "life_total":
+				return Integer.toString(SurvivalExpert.getInstance().getPlayerData().getInt(player.getName() + ".life.total", 0));
+			case "battle_usable":
+				return Integer.toString(SurvivalExpert.getInstance().getPlayerData().getInt(player.getName() + ".battle.total", 0) - SurvivalExpert.getInstance().getPlayerData().getInt(player.getName() + ".battle.used", 0));
+			case "life_usable":
+				return Integer.toString(SurvivalExpert.getInstance().getPlayerData().getInt(player.getName() + ".life.total", 0) - SurvivalExpert.getInstance().getPlayerData().getInt(player.getName() + ".life.used", 0));
 		}
 
 		return null;
