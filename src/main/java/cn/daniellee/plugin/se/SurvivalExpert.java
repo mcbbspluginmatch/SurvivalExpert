@@ -1,8 +1,11 @@
 package cn.daniellee.plugin.se;
 
 import cn.daniellee.plugin.se.command.ExpertCommand;
+import cn.daniellee.plugin.se.component.PlaceholderHook;
 import cn.daniellee.plugin.se.listener.MenuListener;
 import cn.daniellee.plugin.se.listener.PlayerListener;
+import me.clip.placeholderapi.PlaceholderAPI;
+import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -45,6 +48,8 @@ public class SurvivalExpert extends JavaPlugin {
 
 	private Map<String, String> covertItemBlock = new HashMap<>();
 
+	private PlaceholderExpansion placeholderHook;
+
 	public void onEnable(){
 		instance = this;
 
@@ -58,6 +63,15 @@ public class SurvivalExpert extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new MenuListener(), this);
 
 		Bukkit.getPluginCommand("survivalexpert").setExecutor(new ExpertCommand());
+
+		// 挂钩PlaceholderAPI
+		if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+			placeholderHook = new PlaceholderHook(this);
+			placeholderHook.register();
+			getLogger().info(" ");
+			getLogger().info(">>>>>>>>>>>>>>>>>>>> Successfully hook to PlaceholderAPI <<<<<<<<<<<<<<<<<<<".replace("&", "§"));
+			getLogger().info(" ");
+		}
 
 		ageCheckBlock.put("WHEAT", 7);
 		ageCheckBlock.put("CARROTS", 7);
@@ -114,6 +128,14 @@ public class SurvivalExpert extends JavaPlugin {
 		getLogger().info(" ");
 		getLogger().info(">>>>>>>>>>>>>>>>>>>>>>>> SurvivalExpert Unloaded <<<<<<<<<<<<<<<<<<<<<<<<");
 		getLogger().info(" ");
+
+		// 解挂PlaceholderAPI
+		if (placeholderHook != null) {
+			PlaceholderAPI.unregisterExpansion(placeholderHook);
+			getLogger().info(" ");
+			getLogger().info(">>>>>>>>>>>>>>>>>>>>>>>>>> Unhook to PlaceholderAPI <<<<<<<<<<<<<<<<<<<<<<<<<".replace("&", "§"));
+			getLogger().info(" ");
+		}
 	}
 
 	public static SurvivalExpert getInstance() {
