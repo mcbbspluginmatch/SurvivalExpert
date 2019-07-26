@@ -14,8 +14,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
 
 import java.math.BigDecimal;
 import java.util.Random;
@@ -23,36 +21,6 @@ import java.util.Random;
 public class PlayerListener implements Listener {
 
 	private Random random = new Random();
-
-	/**
-	 * 加入时刷新最大血量
-	 * @param e 事件
-	 */
-	@EventHandler
-	public void onPlayerJoin(PlayerJoinEvent e) {
-		refreshMaxHealth(e.getPlayer());
-	}
-
-	/**
-	 * 复活时刷新最大血量
-	 * @param e 事件
-	 */
-	@EventHandler
-	public void onPlayerRespawn(PlayerRespawnEvent e) {
-		refreshMaxHealth(e.getPlayer());
-	}
-
-	private void refreshMaxHealth(Player player) {
-		player.setHealthScale(20);
-		player.setMaxHealth(20);
-		player.setHealth(20);
-	}
-
-
-
-
-
-
 
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent e) {
@@ -86,8 +54,8 @@ public class PlayerListener implements Listener {
 		// 是否需要方块年龄检查
 		Integer age = SurvivalExpert.getInstance().getAgeCheckBlock().get(itemType);
 		if (age != null) {
-			String blockData = e.getBlock().getBlockData().getAsString();
-			if (Integer.valueOf(blockData.substring(blockData.indexOf("age=") + 4, blockData.indexOf("age=") + 5)) < age) {
+			Bukkit.broadcastMessage("data: " + e.getBlock().getData());
+			if (e.getBlock().getData() < age) {
 				// 如果方块Age没达到要求
 				return;
 			}

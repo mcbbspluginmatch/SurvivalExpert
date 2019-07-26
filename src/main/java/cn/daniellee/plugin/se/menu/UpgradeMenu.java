@@ -18,10 +18,10 @@ public class UpgradeMenu {
 
 		// 填充角
 		int[] cornerPosition = new int[]{1, 3, 5};
-		for (int i : cornerPosition) menu.setItem(i, MenuCommon.corner);
+		for (int i : cornerPosition) menu.setItem(i, Common.getCorner());
 		// 填充边
 		int[] borderPosition = new int[]{6, 8};
-		for (int i : borderPosition) menu.setItem(i, MenuCommon.border);
+		for (int i : borderPosition) menu.setItem(i, Common.getBorder());
 
 		List<String> slotLore = SurvivalExpert.getInstance().getConfig().getStringList("menu.upgrade.slot.lore");
 		slotLore.add(0, GemCore.SLOT_LORE);

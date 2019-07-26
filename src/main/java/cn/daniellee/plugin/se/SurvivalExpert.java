@@ -4,7 +4,6 @@ import cn.daniellee.plugin.se.command.ExpertCommand;
 import cn.daniellee.plugin.se.component.PlaceholderHook;
 import cn.daniellee.plugin.se.listener.MenuListener;
 import cn.daniellee.plugin.se.listener.PlayerListener;
-import cn.daniellee.plugin.se.menu.MenuCommon;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Bukkit;
@@ -78,17 +77,26 @@ public class SurvivalExpert extends JavaPlugin {
 		ageCheckBlock.put("CARROTS", 7);
 		ageCheckBlock.put("POTATOS", 7);
 		ageCheckBlock.put("BEETROOTS", 3);
-		ageCheckBlock.put("COCOA", 2);
+		ageCheckBlock.put("COCOA", 8);
 		ageCheckBlock.put("NETHER_WARTS", 3);
 		ageCheckBlock.put("CHORUS_FLOWER", 5);
 		ageCheckBlock.put("SUGAR_CANE", 1);
 		ageCheckBlock.put("BAMBOO", 1);
+		//LAGECY
+		ageCheckBlock.put("CROPS", 7);
+		ageCheckBlock.put("CARROT", 7);
+		ageCheckBlock.put("POTATO", 7);
 
 		covertItemBlock.put("CARROTS", "CARROT");
 		covertItemBlock.put("POTATOS", "POTATO");
 		covertItemBlock.put("BEETROOTS", "BEETROOT");
 		covertItemBlock.put("COCOA", "COCOA_BEANS");
 		covertItemBlock.put("NETHER_WARTS", "NETHER_WART");
+		//LAGECY
+		covertItemBlock.put("CROPS", "WHEAT");
+		covertItemBlock.put("CARROT", "CARROT_ITEM");
+		covertItemBlock.put("POTATO", "POTATO_ITEM");
+		covertItemBlock.put("BEETROOT_BLOCK", "BEETROOT");
 	}
 
 	public void loadConfig() {
@@ -103,7 +111,6 @@ public class SurvivalExpert extends JavaPlugin {
 			getLogger().info(" ");
 			e.printStackTrace();
 		}
-		MenuCommon.load();
 		prefix = "&7[&6" + getConfig().get("prompt-prefix", "SurvivalExpert") + "&7] &3: &r";
 		battleBonusPercentage = new BigDecimal(getConfig().getDouble("gem.battle.bonus-percentage", 0.1));
 		lifeBonusPercentage = new BigDecimal(getConfig().getDouble("gem.life.bonus-percentage", 0.1));
