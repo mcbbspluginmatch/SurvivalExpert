@@ -15,10 +15,10 @@ public class EnumMenu {
 
 		// 填充角
 		int cornerPosition[] = new int[]{ 18, 20, 22, 24, 26 };
-		for (int i : cornerPosition) menu.setItem(i, Common.corner);
+		for (int i : cornerPosition) menu.setItem(i, MenuCommon.corner);
 		// 填充边
 		int[] borderPosition = new int[]{ 19, 21, 23, 25 };
-		for (int i : borderPosition) menu.setItem(i, Common.border);
+		for (int i : borderPosition) menu.setItem(i, MenuCommon.border);
 
 		List<String> oreBlocks = SurvivalExpert.getInstance().getOreBlocks();
 		for (int i = 0; i < oreBlocks.size(); i++) {

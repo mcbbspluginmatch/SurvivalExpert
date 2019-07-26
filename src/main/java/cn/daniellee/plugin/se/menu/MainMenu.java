@@ -16,10 +16,10 @@ public class MainMenu {
 
 		// 填充角
 		int cornerPosition[] = new int[]{ 0, 4, 8, 36, 40, 44 };
-		for (int i : cornerPosition) menu.setItem(i, Common.corner);
+		for (int i : cornerPosition) menu.setItem(i, MenuCommon.corner);
 		// 填充边
 		int[] borderPosition = new int[]{ 1, 3, 5, 7, 9, 17, 27, 35, 37, 39, 41, 43 };
-		for (int i : borderPosition) menu.setItem(i, Common.border);
+		for (int i : borderPosition) menu.setItem(i, MenuCommon.border);
 
 		menu.setItem(11, ItemGenerator.getItem(SurvivalExpert.getInstance().getConfig().getString("menu.main.button.equip.name", "&bGem equip"), SurvivalExpert.getInstance().getConfig().getStringList("menu.main.button.equip.lore"), SurvivalExpert.getInstance().getConfig().getString("menu.main.button.equip.item.material", "LIME_SHULKER_BOX"), SurvivalExpert.getInstance().getConfig().getInt("menu.main.button.equip.item.durability", 0)));
 

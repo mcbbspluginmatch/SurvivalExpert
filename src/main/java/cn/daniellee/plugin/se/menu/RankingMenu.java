@@ -20,10 +20,10 @@ public class RankingMenu {
 
 		// 填充角
 		int[] cornerPosition = new int[]{0, 8, 18, 26, 36, 44};
-		for (int i : cornerPosition) menu.setItem(i, Common.corner);
+		for (int i : cornerPosition) menu.setItem(i, MenuCommon.corner);
 		// 填充边
 		int[] borderPosition = new int[]{9, 17, 27, 35};
-		for (int i : borderPosition) menu.setItem(i, Common.border);
+		for (int i : borderPosition) menu.setItem(i, MenuCommon.border);
 
 		List<PlayerData> playerDataList = new ArrayList<>();
 		Set<String> names = SurvivalExpert.getInstance().getPlayerData().getKeys(false);

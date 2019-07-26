@@ -20,10 +20,10 @@ public class EquipMenu {
 
 		// 填充角
 		int[] cornerPosition = new int[]{2};
-		for (int i : cornerPosition) menu.setItem(i, Common.corner);
+		for (int i : cornerPosition) menu.setItem(i, MenuCommon.corner);
 		// 填充边
 		int[] borderPosition = new int[]{1, 3};
-		for (int i : borderPosition) menu.setItem(i, Common.border);
+		for (int i : borderPosition) menu.setItem(i, MenuCommon.border);
 
 		// 战斗宝石
 		ItemStack battleItem;

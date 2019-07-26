@@ -4,6 +4,7 @@ import cn.daniellee.plugin.se.command.ExpertCommand;
 import cn.daniellee.plugin.se.component.PlaceholderHook;
 import cn.daniellee.plugin.se.listener.MenuListener;
 import cn.daniellee.plugin.se.listener.PlayerListener;
+import cn.daniellee.plugin.se.menu.MenuCommon;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Bukkit;
@@ -98,10 +99,11 @@ public class SurvivalExpert extends JavaPlugin {
 			playerData.load(playerFile);
 		} catch (Exception e) {
 			getLogger().info(" ");
-			getLogger().info("&5[Qualifying]&dAn error occurred in player / reward file load.".replace("&", "§"));
+			getLogger().info("[SurvivalExpert]An error occurred in player / reward file load.".replace("&", "§"));
 			getLogger().info(" ");
 			e.printStackTrace();
 		}
+		MenuCommon.load();
 		prefix = "&7[&6" + getConfig().get("prompt-prefix", "SurvivalExpert") + "&7] &3: &r";
 		battleBonusPercentage = new BigDecimal(getConfig().getDouble("gem.battle.bonus-percentage", 0.1));
 		lifeBonusPercentage = new BigDecimal(getConfig().getDouble("gem.life.bonus-percentage", 0.1));
@@ -109,14 +111,14 @@ public class SurvivalExpert extends JavaPlugin {
 		cropBlocks = Arrays.asList(getConfig().getString("setting.crop.blocks", "WHEAT,CARROTS,POTATOS,BEETROOTS,COCOA,NETHER_WARTS,CHORUS_FLOWER,SUGAR_CANE,PUMPKIN,MELON,CACTUS,BAMBOO").split(","));
 		double orePointChange = getConfig().getDouble("setting.ore.chance", 1);
 		if (orePointChange > 1 || orePointChange < 0.01) {
-			getLogger().info("&5[Qualifying]&dThe chance can only be between 0.01 and 1, it is automatically set to 1.".replace("&", "§"));
+			getLogger().info("[SurvivalExpert]The chance can only be between 0.01 and 1, it is automatically set to 1.".replace("&", "§"));
 			orePointChange = 1;
 		}
 		// 计算几率范围
 		orePointRange = new BigDecimal(orePointChange).multiply(new BigDecimal(RANDOM_CALC_BASE)).intValue();
 		double cropPointChange = getConfig().getDouble("setting.crop.chance", 1);
 		if (cropPointChange > 1 || cropPointChange < 0.01) {
-			getLogger().info("&5[Qualifying]&dThe chance can only be between 0.01 and 1, it is automatically set to 1.".replace("&", "§"));
+			getLogger().info("[SurvivalExpert]The chance can only be between 0.01 and 1, it is automatically set to 1.".replace("&", "§"));
 			cropPointChange = 1;
 		}
 		cropPointRange = new BigDecimal(cropPointChange).multiply(new BigDecimal(RANDOM_CALC_BASE)).intValue();
@@ -155,7 +157,7 @@ public class SurvivalExpert extends JavaPlugin {
 			playerData.save(playerFile);
 		} catch (IOException e) {
 			getLogger().info(" ");
-			getLogger().info("&5[Qualifying]&dAn error occurred in player file save.".replace("&", "§"));
+			getLogger().info("[SurvivalExpert]An error occurred in player file save.".replace("&", "§"));
 			getLogger().info(" ");
 			e.printStackTrace();
 		}
