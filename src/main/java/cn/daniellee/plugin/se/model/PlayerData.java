@@ -6,11 +6,19 @@ public class PlayerData {
 
 	private int battleTotal;
 
+	private int battleUsed;
+
 	private int battleGem;
 
 	private int lifeTotal;
 
+	private int lifeUsed;
+
 	private int lifeGem;
+
+	public PlayerData(String name) {
+		this.name = name;
+	}
 
 	public String getName() {
 		return name;
@@ -28,6 +36,14 @@ public class PlayerData {
 		this.battleTotal = battleTotal;
 	}
 
+	public int getBattleUsed() {
+		return battleUsed;
+	}
+
+	public void setBattleUsed(int battleUsed) {
+		this.battleUsed = battleUsed;
+	}
+
 	public int getBattleGem() {
 		return battleGem;
 	}
@@ -42,6 +58,14 @@ public class PlayerData {
 
 	public void setLifeTotal(int lifeTotal) {
 		this.lifeTotal = lifeTotal;
+	}
+
+	public int getLifeUsed() {
+		return lifeUsed;
+	}
+
+	public void setLifeUsed(int lifeUsed) {
+		this.lifeUsed = lifeUsed;
 	}
 
 	public int getLifeGem() {

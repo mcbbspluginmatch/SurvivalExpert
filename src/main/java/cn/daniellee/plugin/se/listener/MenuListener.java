@@ -5,6 +5,7 @@ import cn.daniellee.plugin.se.component.ItemGenerator;
 import cn.daniellee.plugin.se.core.GemCore;
 import cn.daniellee.plugin.se.menu.*;
 import cn.daniellee.plugin.se.model.GemInfo;
+import cn.daniellee.plugin.se.model.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -58,22 +59,21 @@ public class MenuListener implements Listener {
                     }.runTask(SurvivalExpert.getInstance());
                 } else if (e.getRawSlot() == 29) {
                     int exchangeRatio = SurvivalExpert.getInstance().getConfig().getInt("setting.point-exchange-ratio", 100);
-                    int battleTotal = SurvivalExpert.getInstance().getPlayerData().getInt(player.getName() + ".battle.total", 0);
-                    int battleUsed = SurvivalExpert.getInstance().getPlayerData().getInt(player.getName() + ".battle.used", 0);
+                    PlayerData playerData = SurvivalExpert.getInstance().getStorage().getPlayerData(player.getName());
+                    int battleTotal = playerData.getBattleTotal();
+                    int battleUsed = playerData.getBattleUsed();
                     int canExchange = (battleTotal - battleUsed) / exchangeRatio;
                     if (canExchange > 0) {
                         ItemStack battleGem = GemCore.getGemItemStack(new GemInfo("Battle", 1));
                         if (e.getClick().isLeftClick()) {
                             if (player.getInventory().addItem(battleGem).isEmpty()) {
-                                SurvivalExpert.getInstance().getPlayerData().set(player.getName() + ".battle.used", battleUsed + exchangeRatio);
-                                SurvivalExpert.getInstance().savePlayerData();
+                                SurvivalExpert.getInstance().getStorage().updatePlayerData(player.getName(), "battle_used", battleUsed + exchangeRatio);
                                 player.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.exchage-success", "&eSuccessfully exchange &b{number} {type} &egems.").replace("{number}", Integer.toString(1)).replace("{type}", SurvivalExpert.getInstance().getConfig().getString("message.type.battle", "&dBattle"))).replace("&", "§"));
                             } else player.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.inventory-full", "&eYour inventory is full and you can't get the target item.")).replace("&", "§"));
                         } else if (e.getClick().isRightClick()) {
                             battleGem.setAmount(canExchange);
                             if (player.getInventory().addItem(battleGem).isEmpty()) {
-                                SurvivalExpert.getInstance().getPlayerData().set(player.getName() + ".battle.used", battleUsed + exchangeRatio * canExchange);
-                                SurvivalExpert.getInstance().savePlayerData();
+                                SurvivalExpert.getInstance().getStorage().updatePlayerData(player.getName(), "battle_used", battleUsed + exchangeRatio * canExchange);
                                 player.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.exchage-success", "&eSuccessfully exchange &b{number} {type} &egems.").replace("{number}", Integer.toString(canExchange)).replace("{type}", SurvivalExpert.getInstance().getConfig().getString("message.type.battle", "&dBattle"))).replace("&", "§"));
                             } else player.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.inventory-full", "&eYour inventory is full and you can't get the target item.")).replace("&", "§"));
                         }
@@ -82,22 +82,21 @@ public class MenuListener implements Listener {
                     player.openInventory(EnumMenu.generate());
                 } else if (e.getRawSlot() == 33) {
                     int exchangeRatio = SurvivalExpert.getInstance().getConfig().getInt("setting.point-exchange-ratio", 100);
-                    int lifeTotal = SurvivalExpert.getInstance().getPlayerData().getInt(player.getName() + ".life.total", 0);
-                    int lifeUsed = SurvivalExpert.getInstance().getPlayerData().getInt(player.getName() + ".life.used", 0);
+                    PlayerData playerData = SurvivalExpert.getInstance().getStorage().getPlayerData(player.getName());
+                    int lifeTotal = playerData.getLifeTotal();
+                    int lifeUsed = playerData.getLifeUsed();
                     int canExchange = (lifeTotal - lifeUsed) / exchangeRatio;
                     if (canExchange > 0) {
                         ItemStack lifeGem = GemCore.getGemItemStack(new GemInfo("Life", 1));
                         if (e.getClick().isLeftClick()) {
                             if (player.getInventory().addItem(lifeGem).isEmpty()) {
-                                SurvivalExpert.getInstance().getPlayerData().set(player.getName() + ".life.used", lifeUsed + exchangeRatio);
-                                SurvivalExpert.getInstance().savePlayerData();
+                                SurvivalExpert.getInstance().getStorage().updatePlayerData(player.getName(), "life_used",  lifeUsed + exchangeRatio);
                                 player.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.exchage-success", "&eSuccessfully exchange &b{number} {type} &egems.").replace("{number}", Integer.toString(1)).replace("{type}", SurvivalExpert.getInstance().getConfig().getString("message.type.life", "&aLife"))).replace("&", "§"));
                             } else player.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.inventory-full", "&eYour inventory is full and you can't get the target item.")).replace("&", "§"));
                         } else if (e.getClick().isRightClick()) {
                             lifeGem.setAmount(canExchange);
                             if (player.getInventory().addItem(lifeGem).isEmpty()) {
-                                SurvivalExpert.getInstance().getPlayerData().set(player.getName() + ".life.used", lifeUsed + exchangeRatio * canExchange);
-                                SurvivalExpert.getInstance().savePlayerData();
+                                SurvivalExpert.getInstance().getStorage().updatePlayerData(player.getName(), "life_used",  lifeUsed + exchangeRatio * canExchange);
                                 player.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.exchage-success", "&eSuccessfully exchange &b{number} {type} &egems.").replace("{number}", Integer.toString(canExchange)).replace("{type}", SurvivalExpert.getInstance().getConfig().getString("message.type.life", "&aLife"))).replace("&", "§"));
                             } else player.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.inventory-full", "&eYour inventory is full and you can't get the target item.")).replace("&", "§"));
                         }
@@ -218,29 +217,9 @@ public class MenuListener implements Listener {
                 }
             } else if (menu.getHolder() instanceof EquipMenu.EquipMenuHolder) {
                 GemInfo battleGem = GemCore.getGemInfoByItemStack(menu.getItem(0));
-                if (battleGem != null) {
-                    SurvivalExpert.getInstance().getPlayerData().set(player.getName() + ".battle.gem", battleGem.getLevel());
-                    SurvivalExpert.getInstance().savePlayerData();
-                    // 重新设置伤害加成缓存
-                    GemCore.battleLevelCache.put(player.getName(), battleGem.getLevel());
-                } else {
-                    SurvivalExpert.getInstance().getPlayerData().set(player.getName() + ".battle.gem", null);
-                    SurvivalExpert.getInstance().savePlayerData();
-                    // 重新设置伤害加成缓存
-                    GemCore.battleLevelCache.put(player.getName(), 0);
-                }
+                SurvivalExpert.getInstance().getStorage().updatePlayerData(player.getName(), "battle_gem", battleGem != null ? battleGem.getLevel() : 0);
                 GemInfo lifeGem = GemCore.getGemInfoByItemStack(menu.getItem(4));
-                if (lifeGem != null) {
-                    SurvivalExpert.getInstance().getPlayerData().set(player.getName() + ".life.gem", lifeGem.getLevel());
-                    SurvivalExpert.getInstance().savePlayerData();
-                    // 立即设置生命加成缓存
-                    GemCore.lifeLevelCache.put(player.getName(), lifeGem.getLevel());
-                } else {
-                    SurvivalExpert.getInstance().getPlayerData().set(player.getName() + ".life.gem", null);
-                    SurvivalExpert.getInstance().savePlayerData();
-                    // 立即设置生命加成缓存
-                    GemCore.lifeLevelCache.put(player.getName(), 0);
-                }
+                SurvivalExpert.getInstance().getStorage().updatePlayerData(player.getName(), "life_gem", lifeGem != null ? lifeGem.getLevel() : 0);
             }
         }
     }

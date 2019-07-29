@@ -2,6 +2,7 @@ package cn.daniellee.plugin.se.menu;
 
 import cn.daniellee.plugin.se.SurvivalExpert;
 import cn.daniellee.plugin.se.component.ItemGenerator;
+import cn.daniellee.plugin.se.model.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -29,16 +30,18 @@ public class MainMenu {
 
 		int exchangeRatio = SurvivalExpert.getInstance().getConfig().getInt("setting.point-exchange-ratio", 100);
 
-		int battleTotal = SurvivalExpert.getInstance().getPlayerData().getInt(player.getName() + ".battle.total", 0);
-		int battleUsed = SurvivalExpert.getInstance().getPlayerData().getInt(player.getName() + ".battle.used", 0);
+		PlayerData playerData = SurvivalExpert.getInstance().getStorage().getPlayerData(player.getName());
+
+		int battleTotal = playerData.getBattleTotal();
+		int battleUsed = playerData.getBattleUsed();
 		List<String> battleLore = SurvivalExpert.getInstance().getConfig().getStringList("menu.main.button.battle.lore");
 		if (battleLore != null && !battleLore.isEmpty()) for (int i = 0; i < battleLore.size(); i++) battleLore.set(i, battleLore.get(i).replace("{ratio}", Integer.toString(exchangeRatio)).replace("{total}", Integer.toString(battleTotal)).replace("{usable}", Integer.toString(battleTotal - battleUsed)).replace("{number}", Integer.toString((battleTotal - battleUsed) / exchangeRatio)));
 		menu.setItem(29, ItemGenerator.getItem(SurvivalExpert.getInstance().getConfig().getString("menu.main.button.battle.name", "&dBattle &bpoints gem exchange"), battleLore, SurvivalExpert.getInstance().getConfig().getString("menu.main.button.battle.item.material", "MAGMA_CREAM"), SurvivalExpert.getInstance().getConfig().getInt("menu.main.button.battle.item.durability", 0)));
 
 		menu.setItem(31, ItemGenerator.getItem(SurvivalExpert.getInstance().getConfig().getString("menu.main.button.desc.name", "&bWay to get points"), SurvivalExpert.getInstance().getConfig().getStringList("menu.main.button.desc.lore"), SurvivalExpert.getInstance().getConfig().getString("menu.main.button.desc.item.material", "FIRE_CHARGE"), SurvivalExpert.getInstance().getConfig().getInt("menu.main.button.desc.item.durability", 0)));
 
-		int lifeTotal = SurvivalExpert.getInstance().getPlayerData().getInt(player.getName() + ".life.total", 0);
-		int lifeUsed = SurvivalExpert.getInstance().getPlayerData().getInt(player.getName() + ".life.used", 0);
+		int lifeTotal = playerData.getLifeTotal();
+		int lifeUsed = playerData.getLifeUsed();
 		List<String> lifeLore = SurvivalExpert.getInstance().getConfig().getStringList("menu.main.button.life.lore");
 		if (lifeLore != null && !lifeLore.isEmpty()) for (int i = 0; i < lifeLore.size(); i++) lifeLore.set(i, lifeLore.get(i).replace("{ratio}", Integer.toString(exchangeRatio)).replace("{total}", Integer.toString(lifeTotal)).replace("{usable}", Integer.toString(lifeTotal - lifeUsed)).replace("{number}", Integer.toString((lifeTotal - lifeUsed) / exchangeRatio)));
 		menu.setItem(33, ItemGenerator.getItem(SurvivalExpert.getInstance().getConfig().getString("menu.main.button.life.name", "&aLife &bpoints gem exchange"), lifeLore, SurvivalExpert.getInstance().getConfig().getString("menu.main.button.life.item.material", "SLIME_BALL"), SurvivalExpert.getInstance().getConfig().getInt("menu.main.button.life.item.durability", 0)));

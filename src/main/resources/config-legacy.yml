@@ -1,6 +1,21 @@
 #提示信息前缀
 prompt-prefix: '&6生存专家'
 
+#存储配置
+storage:
+  mysql:
+    #是否使用Mysql
+    use: false
+    #连接信息
+    host: localhost
+    port: 3306
+    username: root
+    password: password
+    database: minecraft
+    table_perfix: 'se_'
+    #如果设置为true，下次启动自动从Yaml导入数据到Mysql
+    convert: false
+
 #菜单配置
 menu:
   #边角填充方块配置

@@ -25,17 +25,7 @@ public class RankingMenu {
 		int[] borderPosition = new int[]{9, 17, 27, 35};
 		for (int i : borderPosition) menu.setItem(i, Common.getBorder());
 
-		List<PlayerData> playerDataList = new ArrayList<>();
-		Set<String> names = SurvivalExpert.getInstance().getPlayerData().getKeys(false);
-		for (String name : names) {
-			PlayerData playerData = new PlayerData();
-			playerData.setName(name);
-			playerData.setBattleTotal(SurvivalExpert.getInstance().getPlayerData().getInt(name + ".battle.total", 0));
-			playerData.setBattleGem(SurvivalExpert.getInstance().getPlayerData().getInt(name + ".battle.gem", 0));
-			playerData.setLifeTotal(SurvivalExpert.getInstance().getPlayerData().getInt(name + ".life.total", 0));
-			playerData.setLifeGem(SurvivalExpert.getInstance().getPlayerData().getInt(name + ".life.gem", 0));
-			playerDataList.add(playerData);
-		}
+		List<PlayerData> playerDataList = SurvivalExpert.getInstance().getStorage().getAllPlayerData();
 		List<PlayerData> battleSort = new ArrayList<>(playerDataList);
 		for (int i = 0; i < battleSort.size() - 1; i++) {
 			for (int j = i + 1; j < battleSort.size(); j++) {
@@ -89,8 +79,9 @@ public class RankingMenu {
 				menu.setItem(lifeSlot[i], tagetItem);
 			}
 		}
+		PlayerData playerData = SurvivalExpert.getInstance().getStorage().getPlayerData(player.getName());
 		List<String> mineLore = SurvivalExpert.getInstance().getConfig().getStringList("menu.ranking.mine.lore");
-		if (mineLore != null && !mineLore.isEmpty()) for (int i = 0; i < mineLore.size(); i++) mineLore.set(i, mineLore.get(i).replace("{battleTotal}", Integer.toString(SurvivalExpert.getInstance().getPlayerData().getInt(player.getName() + ".battle.total", 0))).replace("{battleRank}", Integer.toString(battleRanking + 1)).replace("{lifeTotal}", Integer.toString(SurvivalExpert.getInstance().getPlayerData().getInt(player.getName() + ".life.total", 0))).replace("{lifeRank}", Integer.toString(lifeRanking + 1)));
+		if (mineLore != null && !mineLore.isEmpty()) for (int i = 0; i < mineLore.size(); i++) mineLore.set(i, mineLore.get(i).replace("{battleTotal}", Integer.toString(playerData.getBattleTotal())).replace("{battleRank}", Integer.toString(battleRanking + 1)).replace("{lifeTotal}", Integer.toString(playerData.getLifeTotal())).replace("{lifeRank}", Integer.toString(lifeRanking + 1)));
 		menu.setItem(22, ItemGenerator.getSkullItem(player.getName(), SurvivalExpert.getInstance().getConfig().getString("menu.ranking.mine.name", "&bMy ranking"), mineLore));
 
 		return menu;

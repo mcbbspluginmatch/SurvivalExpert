@@ -6,9 +6,7 @@ import cn.daniellee.plugin.se.model.GemInfo;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 public class GemCore {
@@ -20,28 +18,6 @@ public class GemCore {
 	public static final String SHORTCUT_LORE = "§3SurvivalExpert:Shortcut";
 
 	public static final Pattern GEM_LORE_PATTERN = Pattern.compile("^§3SurvivalExpert:(Battle|Life):\\d+$");
-
-	public static Map<String, Integer> battleLevelCache = new HashMap<>();
-
-	public static Map<String, Integer> lifeLevelCache = new HashMap<>();
-
-	public static int getBattleLevel(String name) {
-		Integer battleLevel = GemCore.battleLevelCache.get(name);
-		if (battleLevel == null) {
-			battleLevel = SurvivalExpert.getInstance().getPlayerData().getInt(name + ".battle.gem", 0);
-			GemCore.battleLevelCache.put(name, battleLevel);
-		}
-		return battleLevel;
-	}
-
-	public static int getLifeLevel(String name) {
-		Integer lifeLevel = GemCore.lifeLevelCache.get(name);
-		if (lifeLevel == null) {
-			lifeLevel = SurvivalExpert.getInstance().getPlayerData().getInt(name + ".life.gem", 0);
-			GemCore.lifeLevelCache.put(name, lifeLevel);
-		}
-		return lifeLevel;
-	}
 
 	public static ItemStack getGemItemStack(GemInfo gemInfo) {
 		List<String> gemLore = SurvivalExpert.getInstance().getConfig().getStringList("gem." + gemInfo.getType().toLowerCase() + ".lore");

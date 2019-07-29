@@ -4,15 +4,15 @@ import cn.daniellee.plugin.se.command.ExpertCommand;
 import cn.daniellee.plugin.se.component.PlaceholderHook;
 import cn.daniellee.plugin.se.listener.MenuListener;
 import cn.daniellee.plugin.se.listener.PlayerListener;
+import cn.daniellee.plugin.se.storage.MysqlStorage;
+import cn.daniellee.plugin.se.storage.Storage;
+import cn.daniellee.plugin.se.storage.StorageConverter;
+import cn.daniellee.plugin.se.storage.YamlStorage;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -27,9 +27,7 @@ public class SurvivalExpert extends JavaPlugin {
 
 	private String prefix;
 
-	private File playerFile = new File(getDataFolder(), "player.yml");
-
-	private FileConfiguration playerData = new YamlConfiguration();
+	private Storage storage;
 
 	private BigDecimal battleBonusPercentage;
 
@@ -100,16 +98,30 @@ public class SurvivalExpert extends JavaPlugin {
 	}
 
 	public void loadConfig() {
-		getLogger().info("[SurvivalExpert] Loading config...");
+		getLogger().info("[SurvivalExpert]Loading config...");
 		if(!getDataFolder().exists()) getDataFolder().mkdirs();
-		try {
-			if (!playerFile.exists()) playerFile.createNewFile();
-			playerData.load(playerFile);
-		} catch (Exception e) {
+		storage = getConfig().getBoolean("storage.mysql.use", false) ? new MysqlStorage() : new YamlStorage();
+		if (storage.initialize()) {
+			getLogger().info("[SurvivalExpert]Storage initialized.");
+		} else {
 			getLogger().info(" ");
-			getLogger().info("[SurvivalExpert]An error occurred in player / reward file load.".replace("&", "§"));
+			getLogger().info("[SurvivalExpert]Initializing data store failed, please edit the config and reload the plugin.".replace("&", "§"));
 			getLogger().info(" ");
-			e.printStackTrace();
+			Bukkit.getPluginManager().disablePlugin(this);
+		}
+		if (getConfig().getBoolean("storage.mysql.use", false) && getConfig().getBoolean("storage.mysql.convert", false)) {
+			Storage yamlStorage = new YamlStorage();
+			if (yamlStorage.initialize()) {
+				StorageConverter converter = new StorageConverter((MysqlStorage) storage, (YamlStorage) yamlStorage);
+				converter.execute();
+				getConfig().set("storage.mysql.convert", false);
+				saveConfig();
+				getLogger().info("[SurvivalExpert]Successfully transferred Yaml data to Mysql.");
+			} else {
+				getLogger().info(" ");
+				getLogger().info("[SurvivalExpert]Yaml data store initialization failed, data conversion canceled.".replace("&", "§"));
+				getLogger().info(" ");
+			}
 		}
 		prefix = "&7[&6" + getConfig().get("prompt-prefix", "SurvivalExpert") + "&7] &3: &r";
 		battleBonusPercentage = new BigDecimal(getConfig().getDouble("gem.battle.bonus-percentage", 0.1));
@@ -155,19 +167,8 @@ public class SurvivalExpert extends JavaPlugin {
 		return prefix;
 	}
 
-	public FileConfiguration getPlayerData() {
-		return playerData;
-	}
-
-	public void savePlayerData() {
-		try {
-			playerData.save(playerFile);
-		} catch (IOException e) {
-			getLogger().info(" ");
-			getLogger().info("[SurvivalExpert]An error occurred in player file save.".replace("&", "§"));
-			getLogger().info(" ");
-			e.printStackTrace();
-		}
+	public Storage getStorage() {
+		return storage;
 	}
 
 	public BigDecimal getBattleBonusPercentage() {

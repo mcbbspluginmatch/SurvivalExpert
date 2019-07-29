@@ -4,6 +4,7 @@ import cn.daniellee.plugin.se.SurvivalExpert;
 import cn.daniellee.plugin.se.core.GemCore;
 import cn.daniellee.plugin.se.menu.*;
 import cn.daniellee.plugin.se.model.GemInfo;
+import cn.daniellee.plugin.se.model.PlayerData;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -85,18 +86,24 @@ public class ExpertCommand implements CommandExecutor {
 				Player targetPlayer = Bukkit.getPlayer(strings[1]);
 				if (targetPlayer != null) {
 					int points = Integer.valueOf(strings[3]);
-					if ("battle".equalsIgnoreCase(strings[2]) || "life".equalsIgnoreCase(strings[2])) {
-						String path = targetPlayer.getName() + "." + strings[2].toLowerCase();
-						int current = SurvivalExpert.getInstance().getPlayerData().getInt(path + ".total", 0);
-						int used = SurvivalExpert.getInstance().getPlayerData().getInt(path + ".used", 0);
+					if ("battle".equalsIgnoreCase(strings[2])) {
+						PlayerData playerData = SurvivalExpert.getInstance().getStorage().getPlayerData(targetPlayer.getName());
+						int current = playerData.getBattleTotal();
+						int used = playerData.getBattleUsed();
 						int result = current + points > 0 ? current + points : 0;
-						SurvivalExpert.getInstance().getPlayerData().set(path + ".total", result);
-						if (result < used) {
-							SurvivalExpert.getInstance().getPlayerData().set(path + ".used", result);
-						}
-						SurvivalExpert.getInstance().savePlayerData();
+						SurvivalExpert.getInstance().getStorage().updatePlayerData(targetPlayer.getName(), "battle_total", result);
+						if (result < used) SurvivalExpert.getInstance().getStorage().updatePlayerData(targetPlayer.getName(), "battle_used", result);
 						commandSender.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.modify-success", "&eOperation completed successfully.")).replace("&", "§"));
-						targetPlayer.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.points-modify", "&eYour {type} &epoints have been modified to &b{number}.").replace("{type}", SurvivalExpert.getInstance().getConfig().getString("message.type." + strings[2].toLowerCase(), "battle".equals(strings[2].toLowerCase()) ? "&dBattle" : "&aLife")).replace("{number}", Integer.toString(result))).replace("&", "§"));
+						targetPlayer.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.points-modify", "&eYour {type} &epoints have been modified to &b{number}.").replace("{type}", SurvivalExpert.getInstance().getConfig().getString("message.type.battle", "&dBattle")).replace("{number}", Integer.toString(result))).replace("&", "§"));
+					} else if ("life".equalsIgnoreCase(strings[2])) {
+						PlayerData playerData = SurvivalExpert.getInstance().getStorage().getPlayerData(targetPlayer.getName());
+						int current = playerData.getLifeTotal();
+						int used = playerData.getLifeUsed();
+						int result = current + points > 0 ? current + points : 0;
+						SurvivalExpert.getInstance().getStorage().updatePlayerData(targetPlayer.getName(), "life_total", result);
+						if (result < used) SurvivalExpert.getInstance().getStorage().updatePlayerData(targetPlayer.getName(), "life_used", result);
+						commandSender.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.modify-success", "&eOperation completed successfully.")).replace("&", "§"));
+						targetPlayer.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.points-modify", "&eYour {type} &epoints have been modified to &b{number}.").replace("{type}", SurvivalExpert.getInstance().getConfig().getString("message.type.life", "&aLife")).replace("{number}", Integer.toString(result))).replace("&", "§"));
 					} else {
 						commandSender.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.invalid-param", "&eInvalid parameter, please check and try again.")).replace("&", "§"));
 						return true;

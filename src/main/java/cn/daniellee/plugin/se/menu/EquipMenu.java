@@ -4,6 +4,7 @@ import cn.daniellee.plugin.se.SurvivalExpert;
 import cn.daniellee.plugin.se.component.ItemGenerator;
 import cn.daniellee.plugin.se.core.GemCore;
 import cn.daniellee.plugin.se.model.GemInfo;
+import cn.daniellee.plugin.se.model.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
@@ -25,9 +26,11 @@ public class EquipMenu {
 		int[] borderPosition = new int[]{1, 3};
 		for (int i : borderPosition) menu.setItem(i, Common.getBorder());
 
+		PlayerData playerData = SurvivalExpert.getInstance().getStorage().getPlayerData(player.getName());
+
 		// 战斗宝石
 		ItemStack battleItem;
-		int battleGem = SurvivalExpert.getInstance().getPlayerData().getInt(player.getName() + ".battle.gem", 0);
+		int battleGem = playerData.getBattleGem();
 		if (battleGem == 0) {
 			battleItem = getSlot("Battle");
 		} else {
@@ -37,7 +40,7 @@ public class EquipMenu {
 
 		// 生存宝石
 		ItemStack lifeItem;
-		int lifeGem = SurvivalExpert.getInstance().getPlayerData().getInt(player.getName() + ".life.gem", 0);
+		int lifeGem = playerData.getLifeGem();
 		if (lifeGem == 0) {
 			lifeItem = getSlot("Life");
 		} else {
