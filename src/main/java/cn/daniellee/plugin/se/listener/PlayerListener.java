@@ -60,7 +60,6 @@ public class PlayerListener implements Listener {
 		// 是否需要方块年龄检查
 		Integer age = SurvivalExpert.getInstance().getAgeCheckBlock().get(itemType);
 		if (age != null) {
-			Bukkit.broadcastMessage("data: " + e.getBlock().getData());
 			if (e.getBlock().getData() < age) {
 				// 如果方块Age没达到要求
 				return;
