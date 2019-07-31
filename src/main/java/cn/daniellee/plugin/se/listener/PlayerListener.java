@@ -3,6 +3,8 @@ package cn.daniellee.plugin.se.listener;
 import cn.daniellee.plugin.se.SurvivalExpert;
 import cn.daniellee.plugin.se.core.GemCore;
 import cn.daniellee.plugin.se.menu.EquipMenu;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -35,7 +37,11 @@ public class PlayerListener implements Listener {
 			if (killerStr.contains(" ")) killerStr = killerStr.substring(0, killerStr.indexOf(" "));
 			Player killer = Bukkit.getPlayer(killerStr);
 			if (killer != null) {
-				Bukkit.broadcastMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.boardcast.kill", "&c{killer} &ecarries &b{battleLevel} &elevel {battle} &egems &b{lifeLevel} &elevel {life} &egems killed &c{dead}.").replace("{killer}", killer.getName()).replace("{battleLevel}", Integer.toString(SurvivalExpert.getInstance().getStorage().getPlayerData(killer.getName()).getBattleGem())).replace("{battle}", SurvivalExpert.getInstance().getConfig().getString("message.type.battle", "&dBattle")).replace("{lifeLevel}", Integer.toString(SurvivalExpert.getInstance().getStorage().getPlayerData(killer.getName()).getLifeGem())).replace("{life}", SurvivalExpert.getInstance().getConfig().getString("message.type.life", "&aLife")).replace("{dead}", e.getEntity().getName())).replace("&", "§"));
+				ByteArrayDataOutput out = ByteStreams.newDataOutput();
+				out.writeUTF("Message");
+				out.writeUTF("ALL");
+				out.writeUTF((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.boardcast.kill", "&c{killer} &ecarries &b{battleLevel} &elevel {battle} &egems &b{lifeLevel} &elevel {life} &egems killed &c{dead}.").replace("{killer}", killer.getName()).replace("{battleLevel}", Integer.toString(SurvivalExpert.getInstance().getStorage().getPlayerData(killer.getName()).getBattleGem())).replace("{battle}", SurvivalExpert.getInstance().getConfig().getString("message.type.battle", "&dBattle")).replace("{lifeLevel}", Integer.toString(SurvivalExpert.getInstance().getStorage().getPlayerData(killer.getName()).getLifeGem())).replace("{life}", SurvivalExpert.getInstance().getConfig().getString("message.type.life", "&aLife")).replace("{dead}", e.getEntity().getName())).replace("&", "§"));
+				killer.sendPluginMessage(SurvivalExpert.getInstance(), "BungeeCord", out.toByteArray());
 			}
 		}
 	}

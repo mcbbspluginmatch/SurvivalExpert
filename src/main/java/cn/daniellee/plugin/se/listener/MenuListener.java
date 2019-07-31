@@ -6,6 +6,8 @@ import cn.daniellee.plugin.se.core.GemCore;
 import cn.daniellee.plugin.se.menu.*;
 import cn.daniellee.plugin.se.model.GemInfo;
 import cn.daniellee.plugin.se.model.PlayerData;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -183,7 +185,11 @@ public class MenuListener implements Listener {
                                     player.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.up-failed", "&eOps! The upgrade failed, you lost half of the gems.")).replace("&", "§"));
                                 } else {
                                     player.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.up-success", "&eCongratulations! Gem upgrade is successful!")).replace("&", "§"));
-                                    Bukkit.broadcastMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.boardcast.upgrade", "&c{name} &ehas successfully combined &b{level} &elevel {type} &egems!").replace("{name}", player.getName()).replace("{level}", Integer.toString(gemInfo.getLevel())).replace("{type}", SurvivalExpert.getInstance().getConfig().getString("message.type." + gemInfo.getType().toLowerCase(), "Battle".equals(gemInfo.getType()) ? "&dBattle" : "&aLife"))).replace("&", "§"));
+                                    ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                                    out.writeUTF("Message");
+                                    out.writeUTF("ALL");
+                                    out.writeUTF((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.boardcast.upgrade", "&c{name} &ehas successfully combined &b{level} &elevel {type} &egems!").replace("{name}", player.getName()).replace("{level}", Integer.toString(gemInfo.getLevel())).replace("{type}", SurvivalExpert.getInstance().getConfig().getString("message.type." + gemInfo.getType().toLowerCase(), "Battle".equals(gemInfo.getType()) ? "&dBattle" : "&aLife"))).replace("&", "§"));
+                                    player.sendPluginMessage(SurvivalExpert.getInstance(), "BungeeCord", out.toByteArray());
                                 }
                                 menu.setItem(0, null);
                                 menu.setItem(2, null);

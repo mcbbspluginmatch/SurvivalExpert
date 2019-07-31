@@ -62,6 +62,8 @@ public class SurvivalExpert extends JavaPlugin {
 
 		Bukkit.getPluginCommand("survivalexpert").setExecutor(new ExpertCommand());
 
+		this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+
 		// 挂钩PlaceholderAPI
 		if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
 			placeholderHook = new PlaceholderHook(this);
@@ -123,7 +125,7 @@ public class SurvivalExpert extends JavaPlugin {
 				getLogger().info(" ");
 			}
 		}
-		prefix = "&7[&6" + getConfig().get("prompt-prefix", "SurvivalExpert") + "&7] &3: &r";
+		prefix = "&7[&6" + getConfig().getString("prompt-prefix", "SurvivalExpert") + "&7] &3: &r";
 		battleBonusPercentage = new BigDecimal(getConfig().getDouble("gem.battle.bonus-percentage", 0.1));
 		lifeBonusPercentage = new BigDecimal(getConfig().getDouble("gem.life.bonus-percentage", 0.1));
 		oreBlocks = Arrays.asList(getConfig().getString("setting.ore.blocks", "COAL_ORE,IRON_ORE,GOLD_ORE,DIAMOND_ORE,EMERALD_ORE,LAPIS_ORE,REDSTONE_ORE,NETHER_QUARTZ_ORE").split(","));
