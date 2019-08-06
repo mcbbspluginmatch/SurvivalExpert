@@ -13,6 +13,7 @@ public class StorageConverter {
 		this.yamlStorage = yamlStorage;
 	}
 
+	// 单向转换 —— 754503921
 	public void execute() {
 		for (PlayerData playerData : yamlStorage.getAllPlayerData()) {
 			mysqlStorage.insertPlayerData(playerData.getName(), playerData.getBattleTotal(), playerData.getBattleUsed(), playerData.getBattleGem(), playerData.getLifeTotal(), playerData.getLifeUsed(), playerData.getLifeGem());

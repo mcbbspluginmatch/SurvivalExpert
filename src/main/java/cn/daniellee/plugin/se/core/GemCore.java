@@ -60,6 +60,7 @@ public class GemCore {
 					String firstLore = lore.get(0);
 					if (GEM_LORE_PATTERN.matcher(firstLore).matches()) {
 						GemInfo gemInfo = new GemInfo();
+						// 都已经用正则了，为什么不用 Matcher 的 group 呢 —— 754503921
 						gemInfo.setType(firstLore.substring(firstLore.indexOf(":") + 1, firstLore.lastIndexOf(":")));
 						gemInfo.setLevel(Integer.valueOf(firstLore.substring(firstLore.lastIndexOf(":") + 1)));
 						return gemInfo;

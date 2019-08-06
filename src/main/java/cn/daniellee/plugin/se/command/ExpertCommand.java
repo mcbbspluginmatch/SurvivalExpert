@@ -90,7 +90,7 @@ public class ExpertCommand implements CommandExecutor {
 						PlayerData playerData = SurvivalExpert.getInstance().getStorage().getPlayerData(targetPlayer.getName());
 						int current = playerData.getBattleTotal();
 						int used = playerData.getBattleUsed();
-						int result = current + points > 0 ? current + points : 0;
+						int result = current + points > 0 ? current + points : 0; // Math.max(current + points, 0); —— 754503921
 						SurvivalExpert.getInstance().getStorage().updatePlayerData(targetPlayer.getName(), "battle_total", result);
 						if (result < used) SurvivalExpert.getInstance().getStorage().updatePlayerData(targetPlayer.getName(), "battle_used", result);
 						commandSender.sendMessage((SurvivalExpert.getInstance().getPrefix() + SurvivalExpert.getInstance().getConfig().getString("message.modify-success", "&eOperation completed successfully.")).replace("&", "§"));

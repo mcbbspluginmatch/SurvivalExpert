@@ -31,6 +31,7 @@ public class MenuListener implements Listener {
      */
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
+        // 这部分的代码可以拆开或者放到对应 Menu 类中处理 —— 754503921
         if (!(e.getWhoClicked() instanceof Player)) return;
         Player player = (Player) e.getWhoClicked();
         Inventory menu = e.getInventory();
@@ -51,6 +52,7 @@ public class MenuListener implements Listener {
                         }
                     }
                 } else if (e.getRawSlot() == 13) {
+                    // 不要在 InventoryClickEvent 中打开关闭背包 —— 754503921
                     player.openInventory(UpgradeMenu.generate());
                 } else if (e.getRawSlot() == 15) {
                     new BukkitRunnable() {
@@ -61,6 +63,7 @@ public class MenuListener implements Listener {
                     }.runTask(SurvivalExpert.getInstance());
                 } else if (e.getRawSlot() == 29) {
                     int exchangeRatio = SurvivalExpert.getInstance().getConfig().getInt("setting.point-exchange-ratio", 100);
+                    // 同步数据库调用 —— 754503921
                     PlayerData playerData = SurvivalExpert.getInstance().getStorage().getPlayerData(player.getName());
                     int battleTotal = playerData.getBattleTotal();
                     int battleUsed = playerData.getBattleUsed();
